@@ -1,0 +1,518 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2299.6">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.0px Courier; -webkit-text-stroke: #000000}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.0px Courier; -webkit-text-stroke: #000000; min-height: 16.0px}
+    span.s1 {font-kerning: none}
+  </style>
+</head>
+<body>
+<p class="p1"><span class="s1">&lt;!DOCTYPE html&gt;</span></p>
+<p class="p1"><span class="s1">&lt;html lang="zh-CN"&gt;</span></p>
+<p class="p1"><span class="s1">&lt;head&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;meta name="description" content="社会学核心学者检索系统 - 按姓名、研究案例、理论流派、活跃年份多维度检索社会学家信息"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;meta name="keywords" content="社会学,社会学家,韦伯,涂尔干,布迪厄,理论流派,学术检索"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;meta name="author" content="你的名字"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;title&gt;社会学核心学者检索系统 | Sociologist Explorer&lt;/title&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;script src="https://cdn.tailwindcss.com"&gt;&lt;/script&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Noto+Serif+SC:wght@400;600;700&amp;display=swap" rel="stylesheet"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;script&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>tailwind.config = {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>theme: {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>extend: {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>colors: {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>primary: '#1e3a5f',</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>secondary: '#c9a962',</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>neutral: '#f5f3ef',</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>dark: '#0f1c2e'</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>},</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>fontFamily: {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>sans: ['Inter', 'system-ui', 'sans-serif'],</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>serif: ['Noto Serif SC', 'serif']</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;style type="text/tailwindcss"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>@layer utilities {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>.glass {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>background: rgba(255, 255, 255, 0.7);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>backdrop-filter: blur(12px);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>-webkit-backdrop-filter: blur(12px);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>.card-hover {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>.card-hover:hover {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>transform: translateY(-4px);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>box-shadow: 0 20px 40px -15px rgba(30, 58, 95, 0.2);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>.search-glow:focus {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>box-shadow: 0 0 0 3px rgba(201, 169, 98, 0.3);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</span></p>
+<p class="p1"><span class="s1">&lt;/head&gt;</span></p>
+<p class="p1"><span class="s1">&lt;body class="bg-neutral min-h-screen font-sans text-dark"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;!-- 背景装饰 --&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div class="fixed inset-0 -z-10 overflow-hidden"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div class="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"&gt;&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-secondary/5 rounded-full blur-3xl translate-y-1/3 -translate-x-1/3"&gt;&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;!-- 头部 --&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;header class="pt-16 pb-10 px-6"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div class="max-w-6xl mx-auto text-center"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="inline-flex items-center gap-2 mb-4"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="w-8 h-[1px] bg-secondary"&gt;&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;span class="text-secondary text-sm tracking-[0.3em] uppercase font-medium"&gt;Sociology Database&lt;/span&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="w-8 h-[1px] bg-secondary"&gt;&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;h1 class="font-serif text-[clamp(2rem,5vw,3.5rem)] font-bold text-primary leading-tight mb-3"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>社会学核心学者检索系统</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/h1&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;p class="text-primary/60 max-w-xl mx-auto text-lg"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>多维度检索社会学家信息 · 支持姓名、理论案例、流派与年份筛选</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/p&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/header&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;!-- 检索区域 --&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;section class="px-6 mb-12"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div class="max-w-4xl mx-auto"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="glass rounded-2xl p-6 shadow-lg border border-white/50"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="grid md:grid-cols-4 gap-4"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;!-- 全文搜索 --&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="md:col-span-2"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;label class="block text-sm font-medium text-primary/70 mb-2"&gt;全文检索（姓名 / 理论 / 案例 / 著作）&lt;/label&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;div class="relative"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-primary/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                                </span>&lt;path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;/svg&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;input<span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                                </span>type="text"<span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                                </span>id="searchInput"<span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                                </span>placeholder="输入关键词，如：韦伯 / 科层制 / 自杀论"</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                                </span>class="w-full pl-12 pr-4 py-3 bg-white/80 border border-primary/10 rounded-xl text-dark placeholder:text-primary/30 focus:outline-none search-glow transition-all"</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;!-- 研究领域 --&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;label class="block text-sm font-medium text-primary/70 mb-2"&gt;理论流派&lt;/label&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;select<span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>id="searchField"</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>class="w-full px-4 py-3 bg-white/80 border border-primary/10 rounded-xl text-dark focus:outline-none search-glow transition-all appearance-none cursor-pointer"</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;option value=""&gt;全部流派&lt;/option&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;option value="冲突理论"&gt;冲突理论&lt;/option&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;option value="结构功能主义"&gt;结构功能主义&lt;/option&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;option value="符号互动论"&gt;符号互动论&lt;/option&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;option value="批判理论"&gt;批判理论&lt;/option&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;option value="女性主义"&gt;女性主义&lt;/option&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;option value="后现代主义"&gt;后现代主义&lt;/option&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;option value="理性选择"&gt;理性选择&lt;/option&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;/select&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;!-- 年份范围 --&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;label class="block text-sm font-medium text-primary/70 mb-2"&gt;活跃年份&lt;/label&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;div class="flex gap-2"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;input<span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                                </span>type="number"<span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                                </span>id="yearStart"<span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                                </span>placeholder="起始"</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                                </span>class="w-full px-3 py-3 bg-white/80 border border-primary/10 rounded-xl text-dark placeholder:text-primary/30 focus:outline-none search-glow transition-all text-center"</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;input<span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                                </span>type="number"<span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                                </span>id="yearEnd"<span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                                </span>placeholder="截止"</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                                </span>class="w-full px-3 py-3 bg-white/80 border border-primary/10 rounded-xl text-dark placeholder:text-primary/30 focus:outline-none search-glow transition-all text-center"</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;!-- 筛选状态 --&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="mt-5 pt-4 border-t border-primary/10 flex items-center justify-between"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="text-sm text-primary/50"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>共收录 &lt;span id="totalCount" class="font-semibold text-primary"&gt;0&lt;/span&gt; 位学者，当前匹配 &lt;span id="resultCount" class="font-semibold text-primary"&gt;0&lt;/span&gt; 位</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;button<span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>id="resetBtn"</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>class="text-sm text-secondary hover:text-secondary/80 font-medium transition-colors"</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>重置筛选</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/button&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/section&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;!-- 结果展示 --&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;main class="px-6 pb-16"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div class="max-w-6xl mx-auto"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div id="sociologistGrid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;!-- 卡片由 JS 动态生成 --&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;!-- 无结果提示 --&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div id="emptyState" class="hidden text-center py-20"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/5 flex items-center justify-center"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;svg class="w-8 h-8 text-primary/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/svg&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;p class="text-primary/50"&gt;未找到匹配的学者信息&lt;/p&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;p class="text-primary/30 text-sm mt-1"&gt;请尝试调整关键词或筛选条件&lt;/p&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/main&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;!-- 关于项目 --&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;section class="px-6 pb-16"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div class="max-w-4xl mx-auto"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="glass rounded-2xl p-8 border border-white/50 shadow-md"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;h2 class="font-serif text-2xl font-bold text-primary mb-4"&gt;关于本工具&lt;/h2&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="grid md:grid-cols-2 gap-8 text-sm text-primary/70 leading-relaxed"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;h3 class="font-semibold text-primary mb-2"&gt;项目背景&lt;/h3&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;p&gt;本系统为社会学学术研究辅助工具，旨在帮助学习者与研究者快速定位社会学家及其核心理论、研究案例与代表著作，建立系统化的理论知识地图。&lt;/p&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;h3 class="font-semibold text-primary mb-2"&gt;数据说明&lt;/h3&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;p&gt;收录社会学经典理论家与当代核心学者，信息涵盖理论流派、活跃时期、国籍、代表作品及核心研究命题。数据持续更新中。&lt;/p&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;h3 class="font-semibold text-primary mb-2"&gt;引用规范&lt;/h3&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;p&gt;如引用本工具作为研究辅助资料，请标注：社会学核心学者检索系统[EB/OL]. 你的名字, 2026. 访问链接：你的网址&lt;/p&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;h3 class="font-semibold text-primary mb-2"&gt;版本信息&lt;/h3&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;p&gt;当前版本：v1.0&lt;br&gt;最后更新：2026年10月&lt;/p&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/section&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;!-- 页脚 --&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;footer class="py-6 text-center text-primary/30 text-sm border-t border-primary/5"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;p&gt;© 2026 社会学核心学者检索系统 · 学术研究用途&lt;/p&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/footer&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;script&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// ========== 社会学家数据库 ==========</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const sociologists = [</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>{</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>id: 1,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>name: "马克斯·韦伯",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>nameEn: "Max Weber",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>field: "冲突理论",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>birth: 1864,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>death: 1920,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>activeStart: 1890,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>activeEnd: 1920,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>nationality: "德国",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>代表作: ["《新教伦理与资本主义精神》", "《经济与社会》"],</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>cases: ["新教伦理命题", "科层制理论", "三种权威类型", "社会行动分类"],</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>description: "现代社会学奠基人之一，提出科层制、三种权威类型等核心概念，对社会行动理论与理性化议题影响深远。"</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>},</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>{</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>id: 2,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>name: "埃米尔·涂尔干",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>nameEn: "Émile Durkheim",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>field: "结构功能主义",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>birth: 1858,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>death: 1917,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>activeStart: 1885,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>activeEnd: 1917,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>nationality: "法国",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>代表作: ["《社会分工论》", "《自杀论》", "《宗教生活的基本形式》"],</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>cases: ["自杀率研究", "机械团结与有机团结", "社会事实", "集体意识"],</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>description: "实证主义社会学代表，确立社会学学科地位，提出社会事实、社会团结等核心概念，开创功能主义分析传统。"</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>},</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>{</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>id: 3,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>name: "卡尔·马克思",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>nameEn: "Karl Marx",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>field: "冲突理论",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>birth: 1818,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>death: 1883,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>activeStart: 1840,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>activeEnd: 1883,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>nationality: "德国",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>代表作: ["《资本论》", "《共产党宣言》"],</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>cases: ["阶级斗争理论", "剩余价值学说", "历史唯物主义", "异化理论"],</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>description: "马克思主义创始人，提出阶级斗争与历史唯物主义理论，对批判社会学与政治经济学具有奠基意义。"</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>},</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>{</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>id: 4,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>name: "乔治·米德",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>nameEn: "George Herbert Mead",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>field: "符号互动论",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>birth: 1863,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>death: 1931,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>activeStart: 1895,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>activeEnd: 1931,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>nationality: "美国",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>代表作: ["《心灵、自我与社会》"],</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>cases: ["自我发展三阶段", "主我与客我", "符号互动", "角色扮演理论"],</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>description: "符号互动论奠基人，提出自我发展理论，强调社会互动通过符号中介形成自我意识与心灵。"</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>},</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>{</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>id: 5,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>name: "塔尔科特·帕森斯",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>nameEn: "Talcott Parsons",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>field: "结构功能主义",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>birth: 1902,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>death: 1979,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>activeStart: 1930,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>activeEnd: 1979,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>nationality: "美国",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>代表作: ["《社会行动的结构》", "《社会系统》"],</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>cases: ["AGIL功能模型", "社会系统理论", "模式变量", "结构功能主义"],</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>description: "结构功能主义集大成者，提出AGIL功能模型与社会系统理论，主导20世纪中期美国社会学发展。"</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>},</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>{</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>id: 6,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>name: "尤尔根·哈贝马斯",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>nameEn: "Jürgen Habermas",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>field: "批判理论",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>birth: 1929,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>death: null,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>activeStart: 1960,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>activeEnd: 2026,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>nationality: "德国",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>代表作: ["《交往行为理论》", "《公共领域的结构转型》"],</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>cases: ["交往理性", "公共领域转型", "商谈伦理学", "生活世界殖民化"],</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>description: "法兰克福学派第二代代表，提出交往理性与公共领域理论，当代最具影响力的批判理论家。"</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>},</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>{</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>id: 7,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>name: "米歇尔·福柯",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>nameEn: "Michel Foucault",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>field: "后现代主义",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>birth: 1926,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>death: 1984,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>activeStart: 1960,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>activeEnd: 1984,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>nationality: "法国",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>代表作: ["《规训与惩罚》", "《性史》", "《知识考古学》"],</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>cases: ["知识考古学", "规训权力", "生命权力", "话语与真理"],</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>description: "后结构主义代表，探讨知识与权力的共生关系，提出话语、规训、生命权力等核心概念。"</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>},</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>{</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>id: 8,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>name: "多萝西·史密斯",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>nameEn: "Dorothy Smith",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>field: "女性主义",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>birth: 1926,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>death: null,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>activeStart: 1970,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>activeEnd: 2026,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>nationality: "加拿大",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>代表作: ["《日常世界的问题》"],</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>cases: ["立场理论", "制度性民族志", "女性主义认识论", "日常生活批判"],</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>description: "女性主义社会学开创者，提出立场理论与制度性民族志，从女性日常生活经验出发批判主流社会学。"</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>},</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>{</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>id: 9,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>name: "皮埃尔·布迪厄",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>nameEn: "Pierre Bourdieu",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>field: "批判理论",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>birth: 1930,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>death: 2002,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>activeStart: 1960,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>activeEnd: 2002,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>nationality: "法国",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>代表作: ["《区隔》", "《实践理论大纲》", "《教育、社会与文化再生产》"],</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>cases: ["文化资本", "惯习", "场域理论", "符号暴力"],</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>description: "提出文化资本、惯习、场域等核心概念，将阶级分析与文化研究结合，当代最具影响力的社会学家之一。"</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>},</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>{</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>id: 10,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>name: "欧文·戈夫曼",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>nameEn: "Erving Goffman",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>field: "符号互动论",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>birth: 1922,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>death: 1982,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>activeStart: 1950,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>activeEnd: 1982,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>nationality: "美国",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>代表作: ["《日常生活中的自我呈现》", "《污名》"],</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>cases: ["拟剧理论", "印象管理", "前台与后台", "污名研究"],</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>description: "拟剧理论创始人，将社会互动比作戏剧表演，提出印象管理、前台后台等生动的互动分析概念。"</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>},</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>{</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>id: 11,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>name: "安东尼·吉登斯",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>nameEn: "Anthony Giddens",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>field: "结构功能主义",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>birth: 1938,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>death: null,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>activeStart: 1970,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>activeEnd: 2026,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>nationality: "英国",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>代表作: ["《社会的构成》", "《现代性的后果》"],</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>cases: ["结构化理论", "现代性反思", "第三条道路", "时空伸延"],</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>description: "提出结构化理论，融合行动与结构二元对立，对现代性、全球化与第三条道路政治有深远论述。"</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>},</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>{</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>id: 12,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>name: "加里·贝克尔",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>nameEn: "Gary Becker",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>field: "理性选择",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>birth: 1930,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>death: 2014,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>activeStart: 1955,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>activeEnd: 2014,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>nationality: "美国",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>代表作: ["《人类行为的经济分析》"],</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>cases: ["人力资本理论", "家庭经济学", "犯罪经济学", "歧视经济学"],</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>description: "经济学帝国主义代表，将理性选择理论扩展到婚姻、生育、犯罪等社会学传统研究领域。"</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>];</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// ========== 检索逻辑 ==========</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const grid = document.getElementById('sociologistGrid');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const emptyState = document.getElementById('emptyState');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const resultCount = document.getElementById('resultCount');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const totalCount = document.getElementById('totalCount');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const searchInput = document.getElementById('searchInput');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const searchField = document.getElementById('searchField');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const yearStart = document.getElementById('yearStart');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const yearEnd = document.getElementById('yearEnd');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const resetBtn = document.getElementById('resetBtn');</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// 显示总数</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>totalCount.textContent = sociologists.length;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function renderCards(data) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>grid.innerHTML = '';</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>if (data.length === 0) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>emptyState.classList.remove('hidden');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>resultCount.textContent = '0';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>return;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>emptyState.classList.add('hidden');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>resultCount.textContent = data.length;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>data.forEach(person =&gt; {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>const card = document.createElement('div');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>card.className = 'glass rounded-2xl p-6 card-hover border border-white/50 flex flex-col';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>card.innerHTML = `</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="flex items-start justify-between mb-4"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;h3 class="font-serif text-xl font-bold text-primary mb-1"&gt;${person.name}&lt;/h3&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;p class="text-sm text-primary/50 italic"&gt;${person.nameEn}&lt;/p&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;span class="px-3 py-1 text-xs font-medium bg-secondary/10 text-secondary rounded-full whitespace-nowrap"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>${person.field}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;/span&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">                    </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="space-y-2 mb-4 text-sm"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;div class="flex items-center gap-2 text-primary/60"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                                </span>&lt;path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                                </span>&lt;path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;/svg&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;span&gt;${person.nationality} · ${person.birth} - ${person.death || '至今'}&lt;/span&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;p class="text-sm text-primary/70 leading-relaxed mb-4"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>${person.description}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/p&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="mt-auto"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;div class="pt-4 border-t border-primary/10 mb-3"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;p class="text-xs text-primary/40 mb-2"&gt;核心研究案例&lt;/p&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;div class="flex flex-wrap gap-2"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                                </span>${person.cases.map(c =&gt; `</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                                    </span>&lt;span class="text-xs px-2 py-1 bg-primary/5 text-primary/70 rounded-md"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                                        </span>${c}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                                    </span>&lt;/span&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                                </span>`).join('')}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;p class="text-xs text-primary/40 mb-2"&gt;代表作品&lt;/p&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;div class="flex flex-wrap gap-2"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                                </span>${person.代表作.map(work =&gt; `</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                                    </span>&lt;span class="text-xs px-2 py-1 bg-secondary/5 text-secondary/80 rounded-md"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                                        </span>${work}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                                    </span>&lt;/span&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                                </span>`).join('')}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>`;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>grid.appendChild(card);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>});</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function filterSociologists() {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const query = searchInput.value.trim().toLowerCase();</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const fieldQuery = searchField.value;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const start = parseInt(yearStart.value) || 0;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const end = parseInt(yearEnd.value) || 9999;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const filtered = sociologists.filter(p =&gt; {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>// 全文匹配：姓名、英文名、案例、著作、简介</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>const textMatch = !query ||<span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>p.name.toLowerCase().includes(query) ||<span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>p.nameEn.toLowerCase().includes(query) ||</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>p.cases.some(c =&gt; c.toLowerCase().includes(query)) ||</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>p.代表作.some(w =&gt; w.toLowerCase().includes(query)) ||</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>p.description.toLowerCase().includes(query);</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>// 流派匹配</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>const fieldMatch = !fieldQuery || p.field === fieldQuery;</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>// 年份匹配（活跃期有重叠即命中）</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>const yearMatch = p.activeEnd &gt;= start &amp;&amp; p.activeStart &lt;= end;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>return textMatch &amp;&amp; fieldMatch &amp;&amp; yearMatch;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>});</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>renderCards(filtered);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// 绑定事件</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>searchInput.addEventListener('input', filterSociologists);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>searchField.addEventListener('change', filterSociologists);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>yearStart.addEventListener('input', filterSociologists);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>yearEnd.addEventListener('input', filterSociologists);</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>resetBtn.addEventListener('click', () =&gt; {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>searchInput.value = '';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>searchField.value = '';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>yearStart.value = '';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>yearEnd.value = '';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>filterSociologists();</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>});</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// 初始化渲染</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>filterSociologists();</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</span></p>
+<p class="p1"><span class="s1">&lt;/body&gt;</span></p>
+<p class="p1"><span class="s1">&lt;/html&gt;</span></p>
+</body>
+</html>
