@@ -1,477 +1,3174 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Sociologist Reference System - Multi-dimensional academic retrieval by name, theories, research cases, schools of thought and active years">
-    <meta name="keywords" content="sociology, sociologists, Weber, Durkheim, Bourdieu, social theory, academic database">
-    <meta name="author" content="Your Name">
-    <title>Sociologist Reference System | Academic Database</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Serif:wght@400;600;700&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#0F2B4D',   // 深海军蓝（黑蓝主色）
-                        secondary: '#1F2937', // 深炭灰（黑白系深色）
-                        neutral: '#F3F4F6',   // 浅灰白
-                        dark: '#0F172A'       // 近黑深蓝
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'system-ui', 'sans-serif'],
-                        serif: ['Noto Serif', 'serif']
-                    }
-                }
-            }
-        }
-    </script>
-    <style type="text/tailwindcss">
-        @layer utilities {
-            .glass {
-                background: rgba(255, 255, 255, 0.75);
-                backdrop-filter: blur(12px);
-                -webkit-backdrop-filter: blur(12px);
-                border: 1px solid rgba(15, 43, 77, 0.08);
-            }
-            .card-hover {
-                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            }
-            .card-hover:hover {
-                transform: translateY(-4px);
-                box-shadow: 0 20px 40px -15px rgba(15, 43, 77, 0.18);
-            }
-            .search-glow:focus {
-                box-shadow: 0 0 0 3px rgba(15, 43, 77, 0.15);
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Sociologist Reference System - multi-dimensional academic database with bidirectional retrieval (research to scholar, scholar to research)">
+<meta name="author" content="Academic Reference">
+<title>Sociologist Reference System | Academic Database</title>
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<link href="https://miaoda.feishu.cn/fonts/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Serif:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+    :root{
+        --primary:#0F2B4D; --secondary:#1F2937; --neutral:#F3F4F6; --dark:#0F172A;
+        --line:rgba(15,43,77,.10); --muted:rgba(15,43,77,.50);
+    }
+    html{scroll-behavior:smooth}
+    body{font-family:'Inter',system-ui,sans-serif;background:var(--neutral);color:var(--dark);}
+    .serif{font-family:'Noto Serif',serif}
+    .glass{background:rgba(255,255,255,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--line)}
+    .bgdec{position:fixed;inset:0;z-index:-10;overflow:hidden}
+    .bgdec span{position:absolute;border-radius:50%;filter:blur(3.2rem)}
+    .card{transition:all .3s cubic-bezier(.4,0,.2,1)}
+    .card:hover{transform:translateY(-4px);box-shadow:0 20px 40px -15px rgba(15,43,77,.18)}
+    .search-glow:focus{box-shadow:0 0 0 3px rgba(15,43,77,.15);outline:none}
+    .tabbtn{transition:all .2s}
+    .tabbtn.active{background:var(--primary);color:#fff}
+    .chip{font-size:11px;padding:2px 8px;border-radius:6px;background:rgba(15,43,77,.06);color:rgba(15,43,77,.7)}
+    .chip2{font-size:11px;padding:2px 8px;border-radius:6px;background:rgba(31,41,55,.06);color:rgba(31,41,55,.8)}
+    .verified{color:#166534;font-size:11px}
+    .uncertain{color:#92400e;font-size:11px}
+    .modal{position:fixed;inset:0;z-index:50;background:rgba(15,23,42,.5);backdrop-filter:blur(4px);display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:24px}
+    .modal.open{display:flex}
+    .mpanel{max-width:760px;width:100%;border-radius:16px;overflow:hidden}
+    ::-webkit-scrollbar{width:8px;height:8px}
+    ::-webkit-scrollbar-thumb{background:rgba(15,43,77,.25);border-radius:4px}
+    ::-webkit-scrollbar-track{background:transparent}
+    .hdots{display:none}
+    @media(max-width:640px){.hdots{display:inline}}
+</style>
 </head>
-<body class="bg-neutral min-h-screen font-sans text-dark">
-    <!-- Background decoration -->
-    <div class="fixed inset-0 -z-10 overflow-hidden">
-        <div class="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
-        <div class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-secondary/5 rounded-full blur-3xl translate-y-1/3 -translate-x-1/3"></div>
+<body class="min-h-screen">
+
+<!-- Background decoration -->
+<div class="bgdec">
+    <span class="w-96 h-96 bg-[#0F2B4D]/5 -top-20 -right-20"></span>
+    <span class="w-[500px] h-[500px] bg-[#1F2937]/5 bottom-0 -left-40"></span>
+</div>
+
+<!-- Header -->
+<header class="pt-14 pb-8 px-6">
+    <div class="max-w-6xl mx-auto text-center">
+        <div class="inline-flex items-center gap-3 mb-4">
+            <div class="w-8 h-px bg-[#0F2B4D]/40"></div>
+            <span class="text-[#0F2B4D]/60 text-xs tracking-[.3em] uppercase font-medium">Academic Database</span>
+            <div class="w-8 h-px bg-[#0F2B4D]/40"></div>
+        </div>
+        <h1 class="serif text-[clamp(2rem,5vw,3.5rem)] font-black text-[#0F2B4D] leading-tight mb-3">
+            Sociologist Reference System
+        </h1>
+        <p class="text-[#0F2B4D]/50 max-w-2xl mx-auto text-base">
+            Bidirectional academic retrieval — search a research topic to find its scholar, or search a scholar to explore all their works and studies
+        </p>
+        <div class="mt-4 inline-flex items-center gap-2 text-xs">
+            <span class="verified">● Verified data</span>
+            <span class="uncertain">● Unverified / pending fields flagged</span>
+        </div>
     </div>
+</header>
 
-    <!-- Header -->
-    <header class="pt-16 pb-10 px-6">
-        <div class="max-w-6xl mx-auto text-center">
-            <div class="inline-flex items-center gap-3 mb-4">
-                <div class="w-8 h-[1px] bg-primary/40"></div>
-                <span class="text-primary/60 text-xs tracking-[0.3em] uppercase font-medium">Sociologist Database</span>
-                <div class="w-8 h-[1px] bg-primary/40"></div>
-            </div>
-            <h1 class="font-serif text-[clamp(2rem,5vw,3.5rem)] font-bold text-primary leading-tight mb-3">
-                Sociologist Reference System
-            </h1>
-            <p class="text-primary/50 max-w-xl mx-auto text-base">
-                Multi-dimensional retrieval by name, theories, research cases, schools of thought and active years
-            </p>
+<!-- Search Panel -->
+<section class="px-6 mb-10">
+    <div class="max-w-4xl mx-auto glass rounded-2xl p-6 shadow-sm">
+        <!-- Mode tabs -->
+        <div class="flex items-center gap-1 mb-5 p-1 bg-[#0F2B4D]/5 rounded-xl w-fit">
+            <button class="tabbtn active px-4 py-2 rounded-lg text-sm font-medium" data-mode="byResearch">Search a study → find scholar</button>
+            <button class="tabbtn px-4 py-2 rounded-lg text-sm font-medium" data-mode="byScholar">Search a scholar → find studies</button>
         </div>
-    </header>
 
-    <!-- Search Section -->
-    <section class="px-6 mb-12">
-        <div class="max-w-4xl mx-auto">
-            <div class="glass rounded-2xl p-6 shadow-sm">
-                <div class="grid md:grid-cols-4 gap-4">
-                    <!-- Full-text Search -->
-                    <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-primary/70 mb-2">Full-text Search</label>
-                        <div class="relative">
-                            <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-primary/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                            </svg>
-                            <input 
-                                type="text" 
-                                id="searchInput" 
-                                placeholder="Name, theory, case or work"
-                                class="w-full pl-12 pr-4 py-3 bg-white/80 border border-primary/10 rounded-xl text-dark placeholder:text-primary/30 focus:outline-none search-glow transition-all"
-                            >
-                        </div>
-                    </div>
-
-                    <!-- School Filter -->
-                    <div>
-                        <label class="block text-sm font-medium text-primary/70 mb-2">Theoretical School</label>
-                        <select 
-                            id="searchField"
-                            class="w-full px-4 py-3 bg-white/80 border border-primary/10 rounded-xl text-dark focus:outline-none search-glow transition-all appearance-none cursor-pointer"
-                        >
-                            <option value="">All Schools</option>
-                            <option value="Conflict Theory">Conflict Theory</option>
-                            <option value="Structural Functionalism">Structural Functionalism</option>
-                            <option value="Symbolic Interactionism">Symbolic Interactionism</option>
-                            <option value="Critical Theory">Critical Theory</option>
-                            <option value="Feminism">Feminism</option>
-                            <option value="Postmodernism">Postmodernism</option>
-                            <option value="Rational Choice">Rational Choice</option>
-                        </select>
-                    </div>
-
-                    <!-- Year Filter -->
-                    <div>
-                        <label class="block text-sm font-medium text-primary/70 mb-2">Active Years</label>
-                        <div class="flex gap-2">
-                            <input 
-                                type="number" 
-                                id="yearStart" 
-                                placeholder="From"
-                                class="w-full px-3 py-3 bg-white/80 border border-primary/10 rounded-xl text-dark placeholder:text-primary/30 focus:outline-none search-glow transition-all text-center"
-                            >
-                            <input 
-                                type="number" 
-                                id="yearEnd" 
-                                placeholder="To"
-                                class="w-full px-3 py-3 bg-white/80 border border-primary/10 rounded-xl text-dark placeholder:text-primary/30 focus:outline-none search-glow transition-all text-center"
-                            >
-                        </div>
-                    </div>
+        <div class="grid md:grid-cols-4 gap-4">
+            <div class="md:col-span-2">
+                <label class="block text-sm font-medium text-[#0F2B4D]/70 mb-2" id="searchLabel">Research keyword (theory, case, method, topic)</label>
+                <div class="relative">
+                    <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#0F2B4D]/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    <input id="q" type="text" placeholder="e.g. rationalization, suicide, habitus, verstehen"
+                        class="w-full pl-12 pr-4 py-3 bg-white/80 border border-[#0F2B4D]/10 rounded-xl text-dark placeholder:text-[#0F2B4D]/30 search-glow">
                 </div>
-
-                <!-- Status Bar -->
-                <div class="mt-5 pt-4 border-t border-primary/10 flex items-center justify-between">
-                    <div class="text-sm text-primary/50">
-                        Total <span id="totalCount" class="font-semibold text-primary">0</span> scholars · 
-                        <span id="resultCount" class="font-semibold text-primary">0</span> matches
-                    </div>
-                    <button 
-                        id="resetBtn"
-                        class="text-sm text-secondary hover:text-secondary/70 font-medium transition-colors"
-                    >
-                        Reset filters
-                    </button>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-[#0F2B4D]/70 mb-2">Theoretical school</label>
+                <select id="school" class="w-full px-4 py-3 bg-white/80 border border-[#0F2B4D]/10 rounded-xl text-dark search-glow appearance-none cursor-pointer">
+                    <option value="">All schools</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-[#0F2B4D]/70 mb-2">Active years</label>
+                <div class="flex gap-2">
+                    <input id="y1" type="number" placeholder="From" class="w-full px-3 py-3 bg-white/80 border border-[#0F2B4D]/10 rounded-xl text-center search-glow">
+                    <input id="y2" type="number" placeholder="To" class="w-full px-3 py-3 bg-white/80 border border-[#0F2B4D]/10 rounded-xl text-center search-glow">
                 </div>
             </div>
         </div>
-    </section>
 
-    <!-- Results Grid -->
-    <main class="px-6 pb-16">
-        <div class="max-w-6xl mx-auto">
-            <div id="sociologistGrid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Cards generated by JS -->
+        <div class="mt-5 pt-4 border-t border-[#0F2B4D]/10 flex items-center justify-between">
+            <div class="text-sm text-[#0F2B4D]/50">
+                Database <span id="dbCount" class="font-semibold text-[#0F2B4D]">0</span> scholars ·
+                <span id="rsCount" class="font-semibold text-[#0F2B4D]">0</span> studies matched
             </div>
+            <button id="resetBtn" class="text-sm text-[#1F2937] hover:text-[#1F2937]/70 font-medium">Reset filters</button>
+        </div>
+    </div>
+</section>
 
-            <!-- Empty State -->
-            <div id="emptyState" class="hidden text-center py-20">
-                <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/5 flex items-center justify-center">
-                    <svg class="w-8 h-8 text-primary/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                </div>
-                <p class="text-primary/50">No matching scholars found</p>
-                <p class="text-primary/30 text-sm mt-1">Try adjusting your keywords or filter criteria</p>
+<!-- Results -->
+<main class="px-6 pb-12">
+    <div class="max-w-6xl mx-auto">
+        <div id="grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        <div id="empty" class="hidden text-center py-20">
+            <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-[#0F2B4D]/5 flex items-center justify-center">
+                <svg class="w-8 h-8 text-[#0F2B4D]/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <p class="text-[#0F2B4D]/50">No matching results</p>
+            <p class="text-[#0F2B4D]/30 text-sm mt-1">Try different keywords or clear the school filter</p>
+        </div>
+    </div>
+</main>
+
+<!-- About -->
+<section class="px-6 pb-12">
+    <div class="max-w-4xl mx-auto glass rounded-2xl p-8 shadow-sm">
+        <h2 class="serif text-2xl font-bold text-[#0F2B4D] mb-6">About this Database</h2>
+        <div class="grid md:grid-cols-2 gap-8 text-sm text-[#0F2B4D]/70 leading-relaxed">
+            <div>
+                <h3 class="font-semibold text-[#0F2B4D] mb-2">Data Integrity</h3>
+                <p>Every scholar, work, and study is written from established academic consensus. Where reliable details (year, method, sample, conclusion) cannot be verified, the field is explicitly flagged as "unverified / insufficient data" rather than invented.</p>
+            </div>
+            <div>
+                <h3 class="font-semibold text-[#0F2B4D] mb-2">Bidirectional Retrieval</h3>
+                <p>Switch retrieval modes to either find the scholar behind a research topic or list every study of a named scholar. Click any study for full detail — year, method, sample, and conclusion.</p>
+            </div>
+            <div>
+                <h3 class="font-semibold text-[#0F2B4D] mb-2">Coverage</h3>
+                <p>Organized by theoretical school — from the classical foundations (positivism, interpretivism, conflict, functionalism) to contemporary schools. Scholars are assigned to one or two primary schools.</p>
+            </div>
+            <div>
+                <h3 class="font-semibold text-[#0F2B4D] mb-2">Citation</h3>
+                <p>Sociologist Reference System [EB/OL]. Academic Reference, 2026.</p>
             </div>
         </div>
-    </main>
+    </div>
+</section>
 
-    <!-- About Section -->
-    <section class="px-6 pb-16">
-        <div class="max-w-4xl mx-auto">
-            <div class="glass rounded-2xl p-8 shadow-sm">
-                <h2 class="font-serif text-2xl font-bold text-primary mb-6">About this Tool</h2>
-                <div class="grid md:grid-cols-2 gap-8 text-sm text-primary/70 leading-relaxed">
-                    <div>
-                        <h3 class="font-semibold text-primary mb-2">Background</h3>
-                        <p>This academic reference tool is designed for sociology students and researchers. It provides quick access to prominent sociologists, their core theories, key research cases and major works, helping users build a systematic map of sociological thought.</p>
-                    </div>
-                    <div>
-                        <h3 class="font-semibold text-primary mb-2">Data Overview</h3>
-                        <p>The database covers both classical and contemporary sociologists, including theoretical schools, active periods, nationality, representative works and core research propositions. The dataset is continuously expanded and updated.</p>
-                    </div>
-                    <div>
-                        <h3 class="font-semibold text-primary mb-2">Citation</h3>
-                        <p>If you use this tool in your research, please cite: Sociologist Reference System [EB/OL]. Your Name, 2026. Available at your website URL.</p>
-                    </div>
-                    <div>
-                        <h3 class="font-semibold text-primary mb-2">Version Info</h3>
-                        <p>Current version: v1.0<br>Last updated: October 2026</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+<footer class="py-6 text-center text-[#0F2B4D]/30 text-sm border-t border-[#0F2B4D]/5">
+    <p>© 2026 Sociologist Reference System · For academic research use only</p>
+</footer>
 
-    <!-- Footer -->
-    <footer class="py-6 text-center text-primary/30 text-sm border-t border-primary/5">
-        <p>© 2026 Sociologist Reference System · For academic research use only</p>
-    </footer>
+<!-- Detail Modal -->
+<div id="modal" class="modal">
+    <div class="mpanel bg-[#F8F9FB] relative">
+        <button id="modalClose" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-white border border-[#0F2B4D]/10 text-[#0F2B4D] hover:bg-[#0F2B4D] hover:text-white transition flex items-center justify-center" title="Close">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+        <div id="modalBody"></div>
+    </div>
+</div>
 
-    <script>
-        // ========== Sociologist Database ==========
-        const sociologists = [
+<script>
+/* ============================================================
+   DATA SCHEMA
+   id        : unique number
+   name      : full name (English)
+   school    : primary theoretical school (must match SCHOOLS list)
+   school2   : optional secondary school
+   birth     : year (number) ; death : year or null (living)
+   nationality: nationality/ies
+   bio       : detailed biography (academic standing + core contributions)
+   works     : array of all major works
+   research  : array of studies, each with
+       title      : study / theory / classic research label
+       year       : year or range (string)
+       method     : research method / approach
+       sample     : data, cases, or subjects studied
+       conclusion : core findings / thesis
+       verified   : true (established) | false (flagged unverified / insufficient data)
+   ============================================================ */
+const SCHOOLS = [
+    "Positivism","Interpretive Sociology","Conflict Theory","Functionalism",
+    "Structural Functionalism","Neofunctionalism","Conflict Theory (contemporary)",
+    "Critical Theory","Symbolic Interactionism","Phenomenological Sociology",
+    "Ethnomethodology","Exchange Theory","Rational Choice Theory",
+    "Structuralism / Post-structuralism","Practice Theory","Feminist Sociology",
+    "Postmodern Sociology","Actor-Network Theory","World-Systems Theory",
+    "Structuration Theory","Globalization Theory",
+    "Process Sociology","Risk Society / Second Modernity"
+];
+
+let scholars = [
+    {
+        id: 1,
+        name: "Auguste Comte",
+        nameEn: "奥古斯特·孔德",
+        school: "Positivism",
+        birth: 1798, death: 1857,
+        nationality: "France",
+        activeStart: 1825, activeEnd: 1857,
+        bio: "法国哲学家，被称为「社会学之父」（the father of sociology）。他于1839年在《实证哲学教程》中首次使用「sociology（社会学）」一词，主张用自然科学的实证方法研究人类社会，创立了实证主义（Positivism）。他提出的「三阶段法则」（Law of Three Stages）与「科学分类等级」奠定了社会学作为独立学科的认识论基础，并把社会学置于科学体系的顶端。晚年构想以「人道教」（Religion of Humanity）为基础的实证社会改造方案，思想影响贯穿整个社会科学史。",
+        works: [
+            "Course of Positive Philosophy (《实证哲学教程》, 1830–1842, 6 vols.)",
+            "System of Positive Polity (《实证政治体系》, 1851–1854)",
+            "Catechism of Positive Religion (《实证主义教义问答》, 1852)",
+            "Plan of the Scientific Operations Necessary for Reorganizing Society (1822)"
+        ],
+        research: [
             {
-                id: 1,
-                name: "Max Weber",
-                field: "Conflict Theory",
-                birth: 1864,
-                death: 1920,
-                activeStart: 1890,
-                activeEnd: 1920,
-                nationality: "Germany",
-                works: ["The Protestant Ethic and the Spirit of Capitalism", "Economy and Society"],
-                cases: ["Protestant ethic thesis", "Bureaucracy theory", "Three types of authority", "Typology of social action"],
-                description: "A founding father of modern sociology. He established the theory of bureaucracy and the typology of legitimate authority, with enduring influence on the study of rationalization and social action."
+                title: "Law of Three Stages (三阶段法则)",
+                year: "1822–1830",
+                method: "历史—演绎的哲学分析：通过通史考察人类理智（intellectual）在不同时期的思维形态，属于理论建构而非经验抽样研究。",
+                sample: "欧洲思想史中的知识形态演变（神学、形而上学、实证三个宏观阶段）",
+                conclusion: "人类认识发展必然经历三个阶段：神学阶段（以超自然力量解释世界）、形而上学阶段（以抽象本质解释世界）、实证阶段（以经验观察与科学规律解释世界）。每个社会及其各门知识都依次经过这三阶段。",
+                verified: true
             },
             {
-                id: 2,
-                name: "Émile Durkheim",
-                field: "Structural Functionalism",
-                birth: 1858,
-                death: 1917,
-                activeStart: 1885,
-                activeEnd: 1917,
-                nationality: "France",
-                works: ["The Division of Labor in Society", "Suicide", "The Elementary Forms of Religious Life"],
-                cases: ["Suicide rate study", "Mechanical vs organic solidarity", "Social fact", "Collective consciousness"],
-                description: "Founder of positivist sociology. He established sociology as an independent academic discipline and laid the foundation for structural functionalism with his theory of social facts and solidarity."
+                title: "Hierarchy of the Sciences (科学分类等级)",
+                year: "1830s",
+                method: "演绎性的学科分类体系：依据各科学对象的复杂性、普遍性与历史出现顺序，把科学排列为递进等级。",
+                sample: "六门基础科学：天文学→物理学→化学→生物学→社会学",
+                conclusion: "科学按从普遍到复杂、从抽象到具体的顺序排列，社会学处于金字塔顶端，依赖并整合前面所有科学；社会学因此被视为「最复杂也最高级」的科学，其建立标志着实证科学的完成。",
+                verified: true
             },
             {
-                id: 3,
-                name: "Karl Marx",
-                field: "Conflict Theory",
-                birth: 1818,
-                death: 1883,
-                activeStart: 1840,
-                activeEnd: 1883,
-                nationality: "Germany",
-                works: ["Capital", "The Communist Manifesto"],
-                cases: ["Class struggle theory", "Surplus value", "Historical materialism", "Theory of alienation"],
-                description: "Founder of Marxist theory. His analysis of class conflict, capital accumulation and historical materialism shaped critical sociology and the entire social sciences."
+                title: "Social Statics and Social Dynamics (社会静力学与社会动力学)",
+                year: "1830s–1842",
+                method: "理论框架建构：借鉴生物学的「结构—功能」类比，对社会进行静态与动态的二分分析。",
+                sample: "社会系统的结构与变迁过程（概念性框架）",
+                conclusion: "社会静力学研究社会秩序与结构的协同（各部分如何协调共存），社会动力学研究社会变迁与进步的规律；二者共同构成社会物理学（social physics），使社会学既解释社会稳定也解释社会演进。",
+                verified: true
             },
             {
-                id: 4,
-                name: "George Herbert Mead",
-                field: "Symbolic Interactionism",
-                birth: 1863,
-                death: 1931,
-                activeStart: 1895,
-                activeEnd: 1931,
-                nationality: "United States",
-                works: ["Mind, Self, and Society"],
-                cases: ["Stages of self-development", "I vs Me", "Symbolic interaction", "Role-taking theory"],
-                description: "Founder of symbolic interactionism. His theory of the social self and symbolic communication established the micro-sociological tradition of interactionist thought."
-            },
-            {
-                id: 5,
-                name: "Talcott Parsons",
-                field: "Structural Functionalism",
-                birth: 1902,
-                death: 1979,
-                activeStart: 1930,
-                activeEnd: 1979,
-                nationality: "United States",
-                works: ["The Structure of Social Action", "The Social System"],
-                cases: ["AGIL paradigm", "Social systems theory", "Pattern variables", "Structural functionalism"],
-                description: "The leading figure of structural functionalism in the 20th century. He built a grand theoretical system that dominated mid-century American sociology."
-            },
-            {
-                id: 6,
-                name: "Jürgen Habermas",
-                field: "Critical Theory",
-                birth: 1929,
-                death: null,
-                activeStart: 1960,
-                activeEnd: 2026,
-                nationality: "Germany",
-                works: ["The Theory of Communicative Action", "The Structural Transformation of the Public Sphere"],
-                cases: ["Communicative rationality", "Public sphere transformation", "Discourse ethics", "Colonization of the lifeworld"],
-                description: "Leading figure of the second generation of the Frankfurt School. His theory of communicative action is one of the most influential frameworks in contemporary critical theory."
-            },
-            {
-                id: 7,
-                name: "Michel Foucault",
-                field: "Postmodernism",
-                birth: 1926,
-                death: 1984,
-                activeStart: 1960,
-                activeEnd: 1984,
-                nationality: "France",
-                works: ["Discipline and Punish", "The History of Sexuality", "The Archaeology of Knowledge"],
-                cases: ["Archaeology of knowledge", "Disciplinary power", "Biopower", "Discourse and truth"],
-                description: "The most influential post-structuralist thinker. His genealogical analysis of power, knowledge and discourse reshaped contemporary sociology and cultural studies."
-            },
-            {
-                id: 8,
-                name: "Dorothy Smith",
-                field: "Feminism",
-                birth: 1926,
-                death: null,
-                activeStart: 1970,
-                activeEnd: 2026,
-                nationality: "Canada",
-                works: ["The Everyday World as Problematic"],
-                cases: ["Standpoint theory", "Institutional ethnography", "Feminist epistemology", "Everyday life critique"],
-                description: "Founder of feminist standpoint sociology. She pioneered institutional ethnography and critiqued the male-dominated nature of mainstream sociological knowledge."
-            },
-            {
-                id: 9,
-                name: "Pierre Bourdieu",
-                field: "Critical Theory",
-                birth: 1930,
-                death: 2002,
-                activeStart: 1960,
-                activeEnd: 2002,
-                nationality: "France",
-                works: ["Distinction", "Outline of a Theory of Practice", "Reproduction in Education, Society and Culture"],
-                cases: ["Cultural capital", "Habitus", "Field theory", "Symbolic violence"],
-                description: "One of the most influential sociologists of the late 20th century. His concepts of habitus, capital and field bridge structuralism and constructivism."
-            },
-            {
-                id: 10,
-                name: "Erving Goffman",
-                field: "Symbolic Interactionism",
-                birth: 1922,
-                death: 1982,
-                activeStart: 1950,
-                activeEnd: 1982,
-                nationality: "United States",
-                works: ["The Presentation of Self in Everyday Life", "Stigma"],
-                cases: ["Dramaturgical theory", "Impression management", "Front vs back stage", "Stigma studies"],
-                description: "Leading figure of micro-sociology. His dramaturgical approach to social interaction revolutionized the study of everyday life and face-to-face encounters."
-            },
-            {
-                id: 11,
-                name: "Anthony Giddens",
-                field: "Structural Functionalism",
-                birth: 1938,
-                death: null,
-                activeStart: 1970,
-                activeEnd: 2026,
-                nationality: "United Kingdom",
-                works: ["The Constitution of Society", "The Consequences of Modernity"],
-                cases: ["Structuration theory", "Reflexive modernity", "Third Way politics", "Time-space distanciation"],
-                description: "One of the most prominent contemporary sociologists. His structuration theory attempts to reconcile the dualism of agency and structure."
-            },
-            {
-                id: 12,
-                name: "Gary Becker",
-                field: "Rational Choice",
-                birth: 1930,
-                death: 2014,
-                activeStart: 1955,
-                activeEnd: 2014,
-                nationality: "United States",
-                works: ["The Economic Approach to Human Behavior"],
-                cases: ["Human capital theory", "Economics of the family", "Economics of crime", "Discrimination theory"],
-                description: "Nobel laureate and founder of the economic approach to sociology. He applied rational choice theory to traditionally sociological topics such as family, crime and education."
+                title: "Positive Method for Sociology (社会学的实证方法纲领)",
+                year: "1839–1842",
+                method: "方法论纲领：主张社会研究应采用观察、实验、比较与历史四种方法。",
+                sample: "方法论原则（非具体经验样本）",
+                conclusion: "社会学应与自然科学同源，坚持经验观察、反对先验思辨；社会现象可通过观察与比较进行研究，从而建立可检验的社会规律。这为后来涂尔干的实证社会学提供了直接的方法论源头。",
+                verified: true
             }
-        ];
-
-        // ========== Search Logic ==========
-        const grid = document.getElementById('sociologistGrid');
-        const emptyState = document.getElementById('emptyState');
-        const resultCount = document.getElementById('resultCount');
-        const totalCount = document.getElementById('totalCount');
-        const searchInput = document.getElementById('searchInput');
-        const searchField = document.getElementById('searchField');
-        const yearStart = document.getElementById('yearStart');
-        const yearEnd = document.getElementById('yearEnd');
-        const resetBtn = document.getElementById('resetBtn');
-
-        totalCount.textContent = sociologists.length;
-
-        function renderCards(data) {
-            grid.innerHTML = '';
-            
-            if (data.length === 0) {
-                emptyState.classList.remove('hidden');
-                resultCount.textContent = '0';
-                return;
+        ]
+    },
+    {
+        id: 2,
+        name: "Herbert Spencer",
+        nameEn: "赫伯特·斯宾塞",
+        school: "Positivism",
+        birth: 1820, death: 1903,
+        nationality: "United Kingdom",
+        activeStart: 1850, activeEnd: 1903,
+        bio: "英国哲学家与社会学家，古典社会进化论的集大成者，社会有机体论（Social Organism）的代表人物。他将生物学进化论系统运用于社会分析，提出「适者生存」（survival of the fittest，后被斯宾塞推广）观点，把社会描绘为从简单到复杂、从同质到异质的进化的有机系统。其《社会学研究》（1873）在英美普及了社会学这门学科，结构—功能分析范式对后来的功能主义（涂尔干、帕森斯）影响深远。",
+        works: [
+            "Social Statics (《社会静力学》, 1851)",
+            "First Principles (《第一原理》, 1862)",
+            "The Principles of Biology (《生物学原理》, 1864–1867)",
+            "The Study of Sociology (《社会学研究》, 1873)",
+            "The Principles of Sociology (《社会学原理》, 1876–1896, 3 vols.)",
+            "The Man versus the State (《人与国家》, 1884)"
+        ],
+        research: [
+            {
+                title: "Social Organism Theory (社会有机体论)",
+                year: "1850s–1876",
+                method: "类比—比较分析：把社会与生物有机体进行结构功能类比，属于宏观理论建构。",
+                sample: "社会系统与生物有机体的结构对应（概念性框架）",
+                conclusion: "社会如同生物体一样有结构、有分工、有功能整合；社会的「器官」（制度、机构）各司其职并相互依存，社会整体与个体部分之间存在生长、分化与功能协调的规律。这一框架被普遍视为结构功能主义的思想先驱。",
+                verified: true
+            },
+            {
+                title: "Theory of Social Evolution (社会进化论)",
+                year: "1850s–1890s",
+                method: "历史—比较分析：考察人类社会从低级到高级的组织形态演变。",
+                sample: "跨文明历史形态比较（狩猎—游牧—农业—工业社会的宏观序列）",
+                conclusion: "社会遵循普遍进化法则，由简单同质状态走向复杂异质状态；进化的动力来自内部分化与功能专门化。斯宾塞由此主张社会变迁是自然、渐进、非人为主导的过程。",
+                verified: true
+            },
+            {
+                title: "Military vs Industrial Society Typology (军事型与工业型社会类型学)",
+                year: "1870s–1890s",
+                method: "类型学比较：依据社会组织原则与制度特征，将社会划分为两种理想类型。",
+                sample: "军事型社会（强制、等级、战争导向）与工业型社会（契约、合作、生产导向）",
+                conclusion: "社会进化伴随从军事型社会向工业型社会的转变：前者以强制统合与军事扩张为特征，后者以自由契约、分工合作与市场协调为特征。这一类型学预示了涂尔干「机械团结/有机团结」与滕尼斯「共同体/社会」的划分。",
+                verified: true
+            },
+            {
+                title: "Structure–Function Precursor Analysis (结构—功能分析先驱)",
+                year: "1876",
+                method: "结构分析：识别社会的结构单元并考察其对整体的功能贡献。",
+                sample: "家庭、政治、宗教、工业等制度单元",
+                conclusion: "斯宾塞强调社会结构的分化与功能的专门化相互促进：随着社会增长与结构分化，各制度承担更专门的功能，整体整合能力随之增强。这一「结构—功能」视角为涂尔干与帕森斯的功能主义确立了分析起点。",
+                verified: true
+            },
+            {
+                title: "Social Darwinism / Survival of the Fittest (社会达尔文主义)",
+                year: "1851–1860s",
+                method: "生物进化论的延伸：把自然选择逻辑移植到社会竞争解释。",
+                sample: "个体与社会竞争（概念性扩展）",
+                conclusion: "斯宾塞主张社会竞争与自然选择类似，「适者生存」被视为社会进步与个体差异的机制。需注意：这一标签后世争议极大，常被批评为为自由放任资本主义辩护，斯宾塞本人晚年观点也有修正。",
+                verified: true
             }
-            
-            emptyState.classList.add('hidden');
-            resultCount.textContent = data.length;
+        ]
+    },
+    {
+        id: 3,
+        name: "Max Weber",
+        nameEn: "马克斯·韦伯",
+        school: "Interpretive Sociology",
+        birth: 1864, death: 1920,
+        nationality: "Germany",
+        activeStart: 1890, activeEnd: 1920,
+        bio: "德国社会学家、历史学家与政治经济学家，与涂尔干、马克思并称「社会学三大奠基人」。他创立了诠释（理解）社会学（verstehende Soziologie），主张社会学应以「理解」（Verstehen）行动者的主观意义为目标，并提出「理想类型」（ideal type）作为研究工具。其核心主题是西方社会的「合理化」（rationalization）进程：对科层制、合法权威类型、新教伦理与资本主义精神、理性化与「祛魅」（disenchantment）的深刻分析，构成了理解现代性的经典框架。其巨著《经济与社会》被视为社会学理论的百科全书式文本。",
+        works: [
+            "The Protestant Ethic and the Spirit of Capitalism (《新教伦理与资本主义精神》, 1904–1905)",
+            "Economy and Society (《经济与社会》, 1922, 遗著)",
+            "Gesammelte Aufsätze zur Religionssoziologie (《宗教社会学论文集》, 1920–1921, 含中国宗教、印度宗教与古代犹太教)",
+            "The Protestant Sects and the Spirit of Capitalism (1906)",
+            "Science as a Vocation (《以学术为业》, 1917)",
+            "Politics as a Vocation (《以政治为业》, 1919)",
+            "General Economic History (《经济通史》, 1923, 遗著)"
+        ],
+        research: [
+            {
+                title: "The Protestant Ethic and the Spirit of Capitalism (新教伦理与资本主义精神)",
+                year: "1904–1905",
+                method: "历史比较与教义文本分析：对加尔文宗、清教（尤其巴克斯特等牧师的著作）的教义文献进行文本解读，并与天主教伦理对照，属于诠释性的历史研究而非统计抽样。",
+                sample: "16–17世纪西欧新教（加尔文宗、清教）教义文本及其信徒的职业伦理",
+                conclusion: "加尔文宗的「预定论」造成信徒得救的焦虑，信徒通过世俗职业的成功（「天职」calling）来确证蒙恩；这种禁欲勤奋、理性积累却不挥霍的伦理，无意中催生了「理性资本主义精神」，构成西方现代资本主义兴起的文化动力。该命题是社会学「观念影响经济」路径的里程碑。",
+                verified: true
+            },
+            {
+                title: "Bureaucracy Theory (科层制理论)",
+                year: "1910s（《经济与社会》成稿）",
+                method: "理想类型建构（ideal-type construction）与历史比较分析。",
+                sample: "现代国家、企业、军队等大型组织的管理形态",
+                conclusion: "科层制（bureaucracy）是现代理性组织的典型形态，以明确分工、层级命令、成文规章、专职化、非人格化（impersonal rules）为特征，技术上效率最高。但科层化使理性化走向极端，形成束缚个体的「理性化铁笼」（iron cage of rationalization）。",
+                verified: true
+            },
+            {
+                title: "Three Types of Legitimate Authority (三种合法权威类型)",
+                year: "1910s",
+                method: "理想类型分类法。",
+                sample: "历史上与当代的统治（Herrschaft）形态",
+                conclusion: "合法统治分为三种理想类型：传统型权威（基于古老习俗）、魅力型/卡里斯玛型权威（基于领袖个人超凡特质）、法理型权威（基于抽象规则与法定程序）。现代国家以法理权威为主；卡里斯玛虽能推动历史性变革，但终将被「常规化」（routinization）纳入日常制度。",
+                verified: true
+            },
+            {
+                title: "Four Types of Social Action (社会行动四类型)",
+                year: "1910s",
+                method: "概念类型学建构（属于理论工具，非经验抽样）。",
+                sample: "行动者赋予其行动的主观意义",
+                conclusion: "社会行动可分为：工具理性行动（以最有效手段达致目标）、价值理性行动（为绝对价值本身而行动）、情感行动（由情绪驱动）、传统行动（由习俗习惯驱动）。社会学以此理解行动的意义结构，并为「理解式解释」提供基础。",
+                verified: true
+            },
+            {
+                title: "Verstehen and Value-Freedom Methodology (理解方法与价值中立)",
+                year: "1904–1917",
+                method: "方法论反思：区分「解释」与「理解」，主张研究者价值中立。",
+                sample: "社会科学方法论原则",
+                conclusion: "社会学不仅要因果解释，更要「理解」（Verstehen）行动的主观意义；研究者应保持价值中立（value-freedom），避免以个人价值判断替代科学分析；「理想类型」是构建分析工具的方法，用以突出研究对象的关键特征以便比较。",
+                verified: true
+            },
+            {
+                title: "Comparative Religious Sociology (比较宗教社会学)",
+                year: "1915–1921",
+                method: "跨文明的历史比较分析：考察不同宗教伦理与经济行为的关联。",
+                sample: "中国的儒家与道教、印度的印度教与佛教、古代犹太教、西方新教",
+                conclusion: "韦伯比较了各大文明宗教的经济伦理，论证西方新教（尤其禁欲新教）提供了独特的理性主义动力，而儒家、印度教等文化传统缺乏类似的天职观与禁欲伦理，因而未自发产生现代理性资本主义。这既支持了「观念塑造经济」的论题，也成为「韦伯命题」长期争论的起点。",
+                verified: true
+            },
+            {
+                title: "Rationalization and the Disenchantment of the World (理性化与祛魅)",
+                year: "1910s",
+                method: "宏观历史分析：追踪合理化进程在各领域的展开。",
+                sample: "科学、法律、经济、行政、宗教等领域的合理化过程",
+                conclusion: "现代性的核心是普遍理性化：世界被「祛魅」，巫术与神圣解释退场，一切皆可被计算与预测。理性化带来效率与可预测性，但也使个体困于科层与工具理性的牢笼，现代自由因此面临「意义丧失」的困境。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 4,
+        name: "Karl Marx",
+        nameEn: "卡尔·马克思",
+        school: "Conflict Theory",
+        birth: 1818, death: 1883,
+        nationality: "Germany",
+        activeStart: 1840, activeEnd: 1883,
+        bio: "德国哲学家、政治经济学家与社会理论家，马克思主义创始人，与涂尔干、韦伯并称社会学三大奠基人。他创立了历史唯物主义（historical materialism）与阶级斗争理论，把社会理解为由物质生产方式所决定的、充满阶级矛盾的有机整体，并据此对资本主义进行系统批判。其剩余价值理论、异化理论、商品拜物教分析以及「经济基础—上层建筑」框架，深刻塑造了批判社会学、冲突理论与后来的批判理论（法兰克福学派）。",
+        works: [
+            "The Economic and Philosophic Manuscripts of 1844 (《1844年经济学哲学手稿》)",
+            "The Communist Manifesto (《共产党宣言》, 1848, 与恩格斯合著)",
+            "The German Ideology (《德意志意识形态》, 1845–1846, 与恩格斯合著)",
+            "The Eighteenth Brumaire of Louis Bonaparte (《路易·波拿巴的雾月十八日》, 1852)",
+            "A Contribution to the Critique of Political Economy (《政治经济学批判》, 1859)",
+            "Grundrisse (《政治经济学批判大纲》, 1857–1858)",
+            "Capital, Vol. I (《资本论》第一卷, 1867; 第二、三卷由恩格斯整理出版)",
+            "Wage-Labour and Capital (《雇佣劳动与资本》, 1849)"
+        ],
+        research: [
+            {
+                title: "Historical Materialism (历史唯物主义)",
+                year: "1845–1859",
+                method: "哲学—历史分析：以「生产方式的矛盾运动」解释社会变迁，属于宏大理论建构。",
+                sample: "社会形态的历史序列：原始—奴隶—封建—资本主义—（未来）共产主义",
+                conclusion: "社会的「经济基础」（生产方式、生产关系）决定「上层建筑」（政治、法律、意识形态）；生产关系的矛盾（生产力发展冲破旧有生产关系）推动社会变革。历史唯物主义强调物质生产而非观念是历史发展的最终动力。",
+                verified: true
+            },
+            {
+                title: "Theory of Surplus Value (剩余价值理论)",
+                year: "1857–1867",
+                method: "政治经济学批判：对古典政治经济学（斯密、李嘉图）的劳动价值论进行批判性发展。",
+                sample: "资本主义生产过程的价值创造与分配",
+                conclusion: "商品的价值由社会必要劳动时间决定；资本家支付的是劳动力的价值，而工人在超出其劳动力价值的劳动时间中创造出「剩余价值」，被资本家无偿占有。剩余价值是利润与资本积累的源泉，由此论证资本主义剥削的结构性机制。",
+                verified: true
+            },
+            {
+                title: "Class Struggle and Historical Dynamics (阶级斗争理论)",
+                year: "1848",
+                method: "历史分析：把阶级对抗视为历史发展的直接动力。",
+                sample: "从奴隶制到资本主义的阶级对抗关系",
+                conclusion: "「至今一切社会的历史都是阶级斗争的历史。」生产资料的占有与否划分出对立阶级；阶级斗争导致社会变革，资本主义的无产阶级终将通过革命推翻资产阶级统治，建立无阶级社会（无产阶级专政为过渡）。",
+                verified: true
+            },
+            {
+                title: "Theory of Alienation (异化理论)",
+                year: "1844",
+                method: "哲学批判分析：基于黑格尔异化概念与费尔巴哈人本主义的综合。",
+                sample: "资本主义条件下工人的劳动与自我关系",
+                conclusion: "在资本主义私有制下，劳动发生四重异化：人与劳动产品的异化、人与劳动活动本身的异化、人与类本质的异化、人与他人的异化。工人越是生产，越是失去自我；异化被视为资本主义对人性的系统性扭曲。",
+                verified: true
+            },
+            {
+                title: "Commodity Fetishism (商品拜物教)",
+                year: "1867（《资本论》第一卷）",
+                method: "政治经济学批判：分析商品交换关系的物化（reification）。",
+                sample: "商品交换背后的社会关系",
+                conclusion: "在商品社会，人与人的社会关系被表现为物与物（商品）之间的关系，商品被赋予「神秘的」拜物教性质，掩盖了背后的人类劳动与社会关系。这一「物化」概念成为后来卢卡奇与批判理论的核心范畴。",
+                verified: true
+            },
+            {
+                title: "Base and Superstructure / State and Ideology (经济基础与上层建筑、国家与意识形态)",
+                year: "1845–1859",
+                method: "结构性分析：考察国家、法律与意识形态对经济基础的依附关系。",
+                sample: "国家机器、法律体系与主导意识形态",
+                conclusion: "国家本质上是维护统治阶级利益的工具，法律与意识形态（宗教、道德、哲学）服务于并再生产现有生产关系；「统治阶级的思想在每一时代都是占统治地位的思想」。这一框架奠定了后来的意识形态批判传统。",
+                verified: true
+            },
+            {
+                title: "Laws of Tendency of Capital Accumulation and Crisis (资本积累与利润率下降趋势)",
+                year: "1857–1894",
+                method: "政治经济学逻辑推演：从剩余价值生产与资本有机构成上升推导积累趋势。",
+                sample: "资本主义再生产过程中的资本有机构成、利润率与危机",
+                conclusion: "资本积累伴随资本有机构成（不变资本/可变资本）提高，导致利润率趋于下降，引发周期性经济危机；资本集中与垄断加剧，工人阶级的相对贫困化与失业后备军扩大，最终激化资本主义的内在矛盾。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 5,
+        name: "Émile Durkheim",
+        nameEn: "埃米尔·涂尔干",
+        school: "Functionalism",
+        birth: 1858, death: 1917,
+        nationality: "France",
+        activeStart: 1885, activeEnd: 1917,
+        bio: "法国社会学家，实证主义社会学的奠基人，与马克思、韦伯并称社会学三大奠基人。他是首位获得正式社会学教席（法国波尔多大学、巴黎大学）的学者，确立了社会学作为独立学科的地位。他主张「社会事实」（social fact）应被当作「物」来客观研究，并以功能分析的视角解释社会团结、集体意识、分工与宗教。其《自杀论》是社会学史上第一部以系统统计数据检验理论假设的实证研究典范；《宗教生活的基本形式》则为宗教社会学奠定了经典基础。",
+        works: [
+            "The Division of Labour in Society (《社会分工论》, 1893)",
+            "The Rules of Sociological Method (《社会学方法的准则》, 1895)",
+            "Suicide (《自杀论》, 1897)",
+            "The Elementary Forms of Religious Life (《宗教生活的基本形式》, 1912)",
+            "Education and Sociology (《教育与社会学》, 1922, 遗著)",
+            "Professional Ethics and Civic Morals (《职业伦理与公民道德》, 1950, 遗著)",
+            "Sociology and Philosophy (《社会学与哲学》, 1924, 遗著)"
+        ],
+        research: [
+            {
+                title: "The Division of Labour in Society / Social Solidarity (社会分工论：机械团结与有机团结)",
+                year: "1893",
+                method: "比较—历史与功能分析：考察分工程度不同的社会其团结基础的差异。",
+                sample: "前工业与工业社会的社会结构",
+                conclusion: "传统社会的团结是「机械团结」（mechanical solidarity），建立在成员相似性与集体意识之上，靠惩罚性法律维系；现代社会的团结是「有机团结」（organic solidarity），建立在分工互补与相互依赖之上，靠恢复性法律维系。分工并不必然导致失范，而是需要相应的道德规范来整合。",
+                verified: true
+            },
+            {
+                title: "The Rules of Sociological Method / Social Fact (社会学方法的准则：社会事实)",
+                year: "1895",
+                method: "方法论纲领：为社会学确立研究对象与实证方法。",
+                sample: "社会事实（制度、规范、趋势等外部强制力量）",
+                conclusion: "社会事实是「物」——外在于个体、具有强制力、普遍存在于社会的现象，须客观地观察与研究；社会现象只能用其他社会现象来解释（而非还原为心理或生物因素）。这套方法论使社会学成为独立、实证的学科。",
+                verified: true
+            },
+            {
+                title: "Suicide: A Study in Sociology (自杀论)",
+                year: "1897",
+                method: "统计分析（古典实证研究范式）：利用官方自杀统计数据进行跨地区、跨群体比较，控制宗教、婚姻、经济状况等变量以检验社会整合假说。",
+                sample: "19世纪欧洲多国（法国、德国、意大利、丹麦等）的官方自杀统计数据，按宗教、婚姻状况、家庭规模、经济景气等分类",
+                conclusion: "自杀率不是纯粹个人心理事件，而受社会整合程度与社会规范的调节。涂尔干划分四种自杀类型：利己性自杀（社会整合不足）、利他性自杀（过度整合）、失范性自杀（社会规范失调，如经济危机或繁荣时上升）、宿命性自杀（过度规范压抑）。新教徒、单身者、经济动荡期自杀率更高的现象，被解释为整合与规范的差异。该研究确立了「以社会事实解释社会事实」的实证路径。",
+                verified: true
+            },
+            {
+                title: "Anomie (失范概念)",
+                year: "1893–1897",
+                method: "概念建构与经验检验结合：用以解释规范调节失效的社会状态。",
+                sample: "分工急速扩张时期的社会、经济危机/繁荣中的自杀率",
+                conclusion: "当社会规范无法有效约束个体欲望、调节社会目标时便出现「失范」（anomie），表现为规范缺失导致的越轨与高自杀率。失范概念此后经默顿发展为美国社会学的重要分析工具（失范—越轨理论）。",
+                verified: true
+            },
+            {
+                title: "The Elementary Forms of Religious Life (宗教生活的基本形式)",
+                year: "1912",
+                method: "民族志资料再分析与功能比较：对澳大利亚原住民图腾崇拜的记录进行社会学再诠释，追溯宗教的社会根源。",
+                sample: "澳洲原住民（尤其阿兰达人 Arunta）的图腾制度、仪式与集体生活资料",
+                conclusion: "宗教的本质是社会集体生活的投射：图腾崇拜所敬拜的其实是社会集体本身；「集体欢腾」（collective effervescence）产生神圣感，社会借此建构「神圣/世俗」之分并维系集体认同。由此涂尔干提出「社会即神」——宗教是社会团结最根本的机制，也是分类体系与社会结构的象征再现。",
+                verified: true
+            },
+            {
+                title: "Collective Consciousness and Moral Integration (集体意识与道德整合)",
+                year: "1893–1912",
+                method: "概念分析与功能解释。",
+                sample: "社会成员的共同信仰与情感系统",
+                conclusion: "集体意识（collective consciousness）——成员共享的信仰与情感——是社会团结与秩序的道德基础；教育、宗教、职业团体等制度的功能在于灌输并再生产集体规范，维持社会整合。这为功能主义「社会需要哪些功能、制度如何满足」的分析奠定了基调。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 6,
+        name: "Talcott Parsons",
+        nameEn: "塔尔科特·帕森斯",
+        school: "Structural Functionalism",
+        birth: 1902, death: 1979,
+        nationality: "United States",
+        activeStart: 1930, activeEnd: 1979,
+        bio: "美国社会学家，20世纪中期美国社会学界的领军人物，结构功能主义（structural functionalism）的大成者。他在哈佛大学执教并长期主持社会学系，提出「唯意志行动理论」与著名的「AGIL」功能模型，试图建立一套整合行动者、社会系统、文化与人格的统一社会理论（grand theory）。其《社会行动的结构》（1937）与《社会系统》（1951）确立了此后数十年美国社会学的主导范式，后被新功能主义与后帕森斯学派批判性继承。",
+        works: [
+            "The Structure of Social Action (《社会行动的结构》, 1937)",
+            "The Social System (《社会系统》, 1951)",
+            "Toward a General Theory of Action (《关于行动的一般理论》, 1951, 主编)",
+            "Essays in Sociological Theory (《社会学理论论文集》, 1949/1954)",
+            "Family, Socialization and Interaction Process (《家庭、社会化与互动过程》, 1955, 与贝尔斯等合著)",
+            "The System of Modern Societies (《现代社会体系》, 1971)",
+            "The American University (《美国大学》, 1973)"
+        ],
+        research: [
+            {
+                title: "Voluntaristic Theory of Action / Unit Act (唯意志行动理论与单位行动)",
+                year: "1937",
+                method: "理论综合：批判地整合涂尔干、韦伯、帕累托与马歇尔的理论，提出统一的行动分析框架。",
+                sample: "抽象的行动分析单元（概念性建构）",
+                conclusion: "任何「单位行动」（unit act）都由四个要素构成：行动者、行动目标、情境（手段与条件）、以及规范性的取向。帕森斯强调行动是「唯意志」（voluntaristic）的——在结构约束下行动者仍作出有意义的规范选择，由此调和结构决定论与自由意志。",
+                verified: true
+            },
+            {
+                title: "AGIL Functional Model (AGIL 功能模型)",
+                year: "1950s–1960s",
+                method: "系统功能分析：识别一切行动系统（社会、人格、文化系统）都必须满足的四项功能要件。",
+                sample: "社会系统、行动系统、乃至任何有组织的系统的功能要件",
+                conclusion: "任何持续存在的系统都必须满足四项功能：A—适应环境（adaptation）、G—目标达成（goal attainment）、I—整合（integration）、L—潜在模式维持与紧张处理（latency/pattern maintenance）。社会通过经济制度满足A、政治制度满足G、法律与共同体满足I、家庭与教育满足L，各功能由相应制度承载。",
+                verified: true
+            },
+            {
+                title: "The Social System and Its Subsystems (社会系统及其整合)",
+                year: "1951",
+                method: "系统论与功能分析：考察社会系统、人格系统与文化系统之间的相互整合。",
+                sample: "行动系统内部的社会、人格、文化三层子系统",
+                conclusion: "社会系统通过制度化规范与角色期望把行动者整合进稳定的互动结构；人格系统通过社会化内化文化价值，文化系统提供共享的意义与价值。三者的和谐配置维持社会均衡（equilibrium），社会变迁被理解为系统的分化与再整合。",
+                verified: true
+            },
+            {
+                title: "Pattern Variables (模式变量)",
+                year: "1951",
+                method: "概念分类：建立分析行动者在互动中所作规范性选择的两极维度。",
+                sample: "角色互动中的价值取向选择",
+                conclusion: "行动者在任何互动中都面临五对模式变量的选择：情感性—情感中立、特殊性—普遍性、扩散性—专一性、先赋性—成就性、集体取向—自我取向。不同社会与制度在上述维度上取向不同，例如现代职业角色偏向普遍、专一、成就取向，而家庭角色偏向情感、扩散取向。",
+                verified: true
+            },
+            {
+                title: "Functional Differentiation and Social Evolution (功能分化与社会进化)",
+                year: "1960s–1971",
+                method: "宏观历史—功能分析：考察社会系统随功能分化而复杂化的进程。",
+                sample: "从前现代社会到现代社会的制度分化（经济、政治、法律、教育等系统独立化）",
+                conclusion: "社会进化表现为结构分化与功能专门化的不断增强：原来由单一制度承担的多重功能，分化为由不同子系统专门承担，并通过规范与价值系统实现更高层次的整合。这种「分化—再整合」过程构成帕森斯对现代化与现代性制度形态的解释。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 7,
+        name: "Robert K. Merton",
+        nameEn: "罗伯特·默顿",
+        school: "Structural Functionalism",
+        birth: 1910, death: 2003,
+        nationality: "United States",
+        activeStart: 1930, activeEnd: 2003,
+        bio: "美国社会学家，哥伦比亚大学教授，功能分析学派的集大成者，也是「中层理论」（theories of the middle range）、「显功能/隐功能」（manifest/latent functions）、「自证预言」（self-fulfilling prophecy）、「失范—紧张理论」（anomie-strain theory）与科学社会学规范（CUDOS）的提出者。他修正了帕森斯宏大理论的抽象倾向，主张以可检验的中层命题研究具体社会现象，对越轨社会学、科学社会学、角色理论与制度研究均有奠基性贡献。",
+        works: [
+            "Social Theory and Social Structure (《社会理论与社会结构》, 1949; 修订 1957/1968)",
+            "The Sociology of Science: Theoretical and Empirical Investigations (《科学社会学》, 1973)",
+            "On the Shoulders of Giants: A Shandean Postscript (《站在巨人的肩膀上》, 1965)",
+            "Continuities in the Sociology of Science (1973)",
+            "The Student-Physician (《医学生》, 1957, 合著)",
+            "Social Structure and Anomie (1938, 论文)"
+        ],
+        research: [
+            {
+                title: "Theories of the Middle Range (中层理论)",
+                year: "1949",
+                method: "方法论主张：批判宏大理论的抽象空泛，主张建立介于宏观理论与具体经验概括之间的可检验命题。",
+                sample: "越轨、流动、角色冲突等具体社会过程",
+                conclusion: "社会学应发展「中层理论」——既非包罗万象的宏大体系，也非零散的经验描述，而是范围适中、可被经验检验的命题（如相对剥夺、参考群体、越轨的失范理论）。这一取向主导了此后数十年美国经验社会学的研究纲领。",
+                verified: true
+            },
+            {
+                title: "Manifest and Latent Functions (显功能与隐功能)",
+                year: "1949",
+                method: "功能分析（以实例论证）：区分行动或制度的两种社会后果。",
+                sample: "如霍皮人祈雨仪式、政党机器、大学教育等制度实例",
+                conclusion: "显功能（manifest function）是参与者有意且意识到的后果；隐功能（latent function）是客观存在但参与者未意识到的后果。功能分析须同时考察显、隐功能以及正功能与反功能（dysfunction），从而超越了早期功能主义「一切皆有正面功能」的假设。",
+                verified: true
+            },
+            {
+                title: "Self-Fulfilling Prophecy (自证预言)",
+                year: "1948",
+                method: "概念分析与案例论证（以1930年代美国银行挤兑为例）。",
+                sample: "银行倒闭传言、种族期望、社会标签等情境",
+                conclusion: "若个体或群体依据「错误」的情境定义采取行动，这一虚假定义会通过其行为后果而「自我实现」成为现实。自证预言解释了偏见、歧视、预期与标签如何塑造社会结果，成为社会问题研究与标签理论的重要工具。",
+                verified: true
+            },
+            {
+                title: "Anomie-Strain Theory of Deviance (失范—紧张理论)",
+                year: "1938（论文）",
+                method: "概念分析加类型学：结合涂尔干失范概念与美国社会的文化目标/制度化手段分析越轨。",
+                sample: "美国社会的「成功」文化目标与机会结构的不平等",
+                conclusion: "当社会普遍认同的文化目标（如财富成功）与实现目标的制度化手段（如教育、就业机会）脱节时，便产生失范（anomie）与「紧张」（strain）。个体据此采取五种适应方式：遵从（conformity）、创新（innovation）、仪式主义（ritualism）、逃避（retreatism）、反叛（rebellion）。越轨（尤其犯罪）多源自「创新」——接受目标但缺乏合法手段。",
+                verified: true
+            },
+            {
+                title: "Role-Set, Role Strain and Status-Set (角色丛与角色冲突)",
+                year: "1957",
+                method: "概念建构：分析个体同时占据多重地位与角色关系带来的张力。",
+                sample: "个体在社会结构中的地位与相应角色关系网络",
+                conclusion: "每个社会地位（status）都对应一组「角色丛」（role-set）——与该地位相连的多重角色关系。由于不同角色对个体的期望往往冲突，产生「角色紧张」（role strain）。社会通过角色隔离、优先排序等机制来缓和冲突，个体则在多重地位（status-set）之间协调身份。",
+                verified: true
+            },
+            {
+                title: "Sociology of Science: CUDOS Norms (科学社会学与默顿规范)",
+                year: "1942–1973",
+                method: "制度分析与理想类型：考察科学共同体运行的社会规范。",
+                sample: "西方科学共同体（尤以纯科学领域为典型）",
+                conclusion: "默顿提出科学的精神气质（ethos）由四组规范构成：普遍主义（universalism，评价不依赖个人属性）、公有主义（communism，知识公开共享）、无私利性（disinterestedness）、有条理的怀疑主义（organized skepticism），合称CUDOS。他还提出「马太效应」（rich get richer）以解释科学奖励分配的不平等。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 8,
+        name: "Ralf Dahrendorf",
+        nameEn: "拉尔夫·达伦多夫",
+        school: "Conflict Theory (contemporary)",
+        birth: 1929, death: 2009,
+        nationality: "Germany / United Kingdom",
+        activeStart: 1955, activeEnd: 2009,
+        bio: "德裔英国社会学家与政治学家，当代社会冲突理论（social conflict theory）的代表人物。他在《工业社会中的阶级与阶级冲突》（1959）中批判结构功能主义过度强调共识与均衡，主张社会本质上是强制与冲突的结构：权威与权力的不平等分配是社会冲突的根源。他以「权威占有」重新定义阶级，并提出冲突可被制度化调节的观点，是20世纪后半叶与帕森斯分庭抗礼的理论人物。",
+        works: [
+            "Class and Class Conflict in Industrial Society (《工业社会中的阶级与阶级冲突》, 1959)",
+            "Essays in the Theory of Society (《社会理论论文集》, 1968)",
+            "Conflict after Class (《阶级之后的冲突》, 1967)",
+            "Life Chances (《生活机会》, 1979)",
+            "Modern Social Conflict (《现代社会冲突》, 1988)",
+            "The New Liberty (1975)"
+        ],
+        research: [
+            {
+                title: "Authority and Conflict Theory (权威与冲突理论)",
+                year: "1959",
+                method: "理论批判与再概念化：针对结构功能主义（帕森斯）的共识—均衡假设提出对立框架。",
+                sample: "工业社会的权威结构与强制关系",
+                conclusion: "社会结构并非由共识维系，而是由权威（authority）的不平等分配所建构：拥有权威者与服从者之间存在利益对立，冲突内在于一切社会结构。达伦多夫以此主张「冲突是常态而非失序」，社会学应关注权力与强制的维度。",
+                verified: true
+            },
+            {
+                title: "Rethinking Class: Authority Positions (以权威占有重新定义阶级)",
+                year: "1959",
+                method: "理论建构：修正马克思主义的生产资料占有论，转向韦伯式的权威维度。",
+                sample: "工业社会中的权威—服从关系网络",
+                conclusion: "阶级不再单纯取决于是否占有生产资料，而取决于是否占有权威地位（position in authority structure）。管理者与工人、上级与下级的对立源于权威分配而非财产权，使冲突理论适用于更广泛的组织与社会场域。",
+                verified: true
+            },
+            {
+                title: "Institutionalization and Regulation of Conflict (冲突的制度化调节)",
+                year: "1960s",
+                method: "政治—社会分析：考察社会如何处理与调节结构性冲突。",
+                sample: "劳资谈判、议会民主、仲裁机构等制度安排",
+                conclusion: "冲突本身不必导致社会解体；通过谈判、仲裁、议会代表等制度化渠道，冲突可被调节并降低烈度，使其成为社会变迁的建设性动力。制度化的冲突调节是现代开放社会的重要特征。",
+                verified: true
+            },
+            {
+                title: "Life Chances and Modern Social Conflict (生活机会与现代冲突)",
+                year: "1979–1988",
+                method: "概念建构与宏观分析：从阶级冲突转向更广泛的权利与参与议题。",
+                sample: "公民权、政治参与、教育机会等权利分配",
+                conclusion: "社会不平等的核心是「生活机会」（life chances）的分配差异。随着工业冲突被制度化，现代冲突的重心转向公民权利、政治参与与身份认同的争取，冲突形式从阶级对抗扩展为多元的争取权利的运动。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 9,
+        name: "Lewis A. Coser",
+        nameEn: "刘易斯·科塞",
+        school: "Conflict Theory (contemporary)",
+        birth: 1913, death: 2003,
+        nationality: "United States (born in Germany)",
+        activeStart: 1950, activeEnd: 2003,
+        bio: "德裔美国社会学家，冲突理论的代表人物之一。与达伦多夫强调冲突的破坏性不同，科塞在《社会冲突的功能》（1956）中系统论证冲突具有建设性与整合性的社会功能——强化群体边界、释放紧张、促进适应与变迁。他整合齐美尔的冲突分析，提出「社会安全阀」等经典概念，被视为把冲突纳入功能分析传统的重要桥梁。",
+        works: [
+            "The Functions of Social Conflict (《社会冲突的功能》, 1956)",
+            "Continuities in the Study of Social Conflict (《社会冲突研究的连续性》, 1967)",
+            "Masters of Sociological Thought (《社会学思想大师》, 1977)",
+            "Greedy Institutions (《贪婪的制度》, 1974)"
+        ],
+        research: [
+            {
+                title: "The Functions of Social Conflict (社会冲突的功能)",
+                year: "1956",
+                method: "功能分析（整合齐美尔冲突理论）：考察冲突对群体与社会的正面后果。",
+                sample: "群体内部与群体之间的冲突案例（政治、宗教、利益群体）",
+                conclusion: "冲突并非只有破坏性：它强化群体内部认同与边界、凝聚成员团结、释放被压抑的紧张、促使规范更新与社会变迁。低烈度、频繁的冲突反而能维持社会弹性与整合，是「社会安全阀」的运作基础。",
+                verified: true
+            },
+            {
+                title: "Safety-Valve Institutions (社会安全阀机制)",
+                year: "1956",
+                method: "功能分析：识别允许紧张与敌意得到释放而不危及整体的制度。",
+                sample: "体育竞技、选举、游行、争吵等宣泄渠道",
+                conclusion: "社会通过「安全阀」制度为敌意与紧张提供合法宣泄渠道，使其在不对抗整体结构的情况下得到释放，从而维护系统的稳定。但安全阀只疏导而未必解决根源矛盾，可能掩盖深层问题。",
+                verified: true
+            },
+            {
+                title: "Realistic vs Non-Realistic Conflict (现实性与非现实性冲突)",
+                year: "1956",
+                method: "概念类型学：区分冲突的动机与功能。",
+                sample: "为争夺稀缺资源（现实性）vs 为发泄敌意本身（非现实性）",
+                conclusion: "现实性冲突（realistic）以达成具体目标为导向，冲突本身是手段；非现实性冲突（non-realistic）以释放紧张本身为目的，目标对象是替代性的。这一区分帮助分析冲突的成因与可调节程度。",
+                verified: true
+            },
+            {
+                title: "Conflict and Social Change (冲突与社会变迁)",
+                year: "1956–1967",
+                method: "功能—变迁分析：论证冲突如何触发规范更新与结构重组。",
+                sample: "不同激烈程度与频度下的群体内外冲突",
+                conclusion: "冲突通过暴露不适应环境的旧规范、迫使社会适应新条件而推动变迁。科塞还指出，群体内部冲突越频繁，越有助于明确规范与调整权力平衡；冲突的烈度与结构弹性相关，弹性高的社会更能容纳并转化冲突。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 10,
+        name: "C. Wright Mills",
+        nameEn: "查尔斯·赖特·米尔斯",
+        school: "Conflict Theory (contemporary)",
+        birth: 1916, death: 1962,
+        nationality: "United States",
+        activeStart: 1945, activeEnd: 1962,
+        bio: "美国社会学家与批判公共知识分子，冲突理论与激进社会学的代表。他以《权力精英》（1956）揭示美国社会由政治、经济、军事三大权力网络构成的「权力精英」所主导，批驳多元民主论；以《社会学的想象力》（1959）呼吁社会学家连接「个人困扰」与「公共议题」。他还尖锐批判当时盛行的宏大理论与抽象经验主义，主张社会学应具有批判意识与公共担当。",
+        works: [
+            "The New Men of Power (《新权力人物》, 1948)",
+            "White Collar: The American Middle Classes (《白领：美国的中产阶级》, 1951)",
+            "The Power Elite (《权力精英》, 1956)",
+            "The Sociological Imagination (《社会学的想象力》, 1959)",
+            "The Causes of World War Three (《第三次世界大战的起因》, 1958)",
+            "Power, Politics and People (遗著文集, 1963)"
+        ],
+        research: [
+            {
+                title: "The Sociological Imagination (社会学的想象力)",
+                year: "1959",
+                method: "方法论批判与倡导：反思社会学研究取向，提倡宏观—微观连接。",
+                sample: "个人困扰（personal troubles）与公共议题（public issues）的区分",
+                conclusion: "社会学的想象力在于把个人经验置于更大的社会结构与历史进程中理解：失业、离婚等「个人困扰」实为结构性「公共议题」。米尔斯批判宏大理论（帕森斯式抽象）与抽象经验主义（科尔曼式统计）脱离社会现实，主张社会学应面向公共问题并承担批判使命。",
+                verified: true
+            },
+            {
+                title: "The Power Elite (权力精英)",
+                year: "1956",
+                method: "结构性分析：考察美国经济、政治、军事三大机构的顶层人事网络与决策权力。",
+                sample: "美国大公司高层、联邦行政/军事高层与政治精英（1950年代）",
+                conclusion: "美国的决策权高度集中于「权力精英」——经济（大公司）、政治（行政与立法高层）、军事三个领域的高层成员相互通婚、共事与共谋，形成封闭且相互勾结的顶层。他们超越普通公民与选举监督，主导外交、军事与经济政策，使美国偏离多元民主理想，趋向精英支配。",
+                verified: true
+            },
+            {
+                title: "White Collar: The American Middle Classes (白领：中产阶级的异化)",
+                year: "1951",
+                method: "社会结构与职业分析：考察中产阶级的职业地位、声望与生活方式。",
+                sample: "美国中产阶级白领职业（职员、销售、专业人员等）",
+                conclusion: "白领中产阶级虽享有体面声望，却无实质权力与财产，成为「新小人物」：其劳动被科层化、身份被工具化，普遍陷入异化与焦虑。米尔斯以此揭示美国「地位政治」下中产的无力感，预示了后来对中产「无根性」的讨论。",
+                verified: true
+            },
+            {
+                title: "Critique of Grand Theory and Abstracted Empiricism (对宏大理论与抽象经验主义的批判)",
+                year: "1959",
+                method: "理论批评：诊断美国社会学两大学术取向的缺陷。",
+                sample: "帕森斯的宏大理论与当时盛行的问卷调查统计学",
+                conclusion: "米尔斯批评宏大理论脱离经验、以抽象术语掩盖实质问题，又批评抽象经验主义沉溺于琐碎统计、回避重大社会结构问题。他主张社会学应在结构与历史中研究权力、阶层与公共议题，恢复批判与公共性。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 11,
+        name: "Randall Collins",
+        nameEn: "兰德尔·柯林斯",
+        school: "Conflict Theory (contemporary)",
+        birth: 1941, death: null,
+        nationality: "United States",
+        activeStart: 1970, activeEnd: 2026,
+        bio: "美国当代社会学家，冲突社会学的集大成者，以微观与宏观相结合的理论综合著称。他在《冲突社会学》（1975）中主张社会由争夺资源、地位与声望的斗争构成；在《互动仪式链》（2004）中发展出微观社会学理论，把社会结构解释为由「互动仪式链」建构的情感与符号系统；在《暴力：一种微观社会学理论》（2008）中以视频等资料分析暴力的情境动力。此外还提出「文凭社会」与「女性主义互动仪式」等著名命题。",
+        works: [
+            "Conflict Sociology: Toward an Explanatory Science (《冲突社会学》, 1975)",
+            "The Credential Society (《文凭社会》, 1979)",
+            "Weberian Sociological Theory (1986)",
+            "Theoretical Sociology (《理论社会学》, 1988)",
+            "Interaction Ritual Chains (《互动仪式链》, 2004)",
+            "Violence: A Micro-sociological Theory (《暴力：一种微观社会学理论》, 2008)"
+        ],
+        research: [
+            {
+                title: "Conflict Sociology (冲突社会学)",
+                year: "1975",
+                method: "理论综合：把微观互动动力与宏观结构分析结合，提出统一的冲突—微观社会学框架。",
+                sample: "职业、组织、阶层与国家的资源与地位斗争",
+                conclusion: "社会秩序源于持续的资源与地位争夺：人们在微观互动中积累情感能量与地位，宏观结构则是这些互动的长期产物。柯林斯以「互动仪式」解释组织与国家的团结，主张冲突理论能同时解释稳定与变迁。",
+                verified: true
+            },
+            {
+                title: "Interaction Ritual Chains (互动仪式链)",
+                year: "2004",
+                method: "微观社会学与经验研究：整合涂尔干仪式理论与戈夫曼互动分析，考察具体互动场景的情感过程。",
+                sample: "课堂、会议、宗教礼拜、线上社区等互动场景",
+                conclusion: "社会是由环环相扣的「互动仪式链」构成的：共同在场、相互关注、共享情绪与符号，产生「情感能量」（emotional energy）。个体在仪式中积累的情感能量与集体符号塑造了自我认同与社会团结，宏观结构正是无数微观互动仪式的网络化结果。",
+                verified: true
+            },
+            {
+                title: "The Credential Society (文凭社会)",
+                year: "1979",
+                method: "历史—比较分析：考察教育文凭在美国职业分层中的作用。",
+                sample: "美国高等教育扩张与职业准入（20世纪）",
+                conclusion: "文凭（credential）成为地位竞争的通货：教育资格控制着通往高地位职业的通道，但教育内容与实际技能往往脱节。柯林斯称之为「文凭通胀」——当所有人都持有文凭时，其筛选价值被稀释，地位斗争转向更高学历。这一分析成为教育社会学「功能—冲突」之争的经典。",
+                verified: true
+            },
+            {
+                title: "Violence: A Micro-sociological Theory (暴力的微观社会学)",
+                year: "2008",
+                method: "微观社会学分析：利用监控视频、目击记录等资料研究暴力发生的情境过程。",
+                sample: "斗殴、处决、战争、校园枪击等暴力事件的微观情境",
+                conclusion: "暴力并非本能冲动，而是特定情境互动的产物：多数人在暴力瞬间陷入「对抗紧张」（confrontational tension）而无法动手，真正的暴力需要打破这一紧张（如突袭、以强凌弱、群体压力）。柯林斯由此把暴力解释为社会情境动力而非个体病理，挑战了传统暴力归因。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 12,
+        name: "Max Horkheimer",
+        nameEn: "马克斯·霍克海默",
+        school: "Critical Theory",
+        birth: 1895, death: 1973,
+        nationality: "Germany",
+        activeStart: 1930, activeEnd: 1973,
+        bio: "德国哲学家与社会理论家，法兰克福学派（社会研究所）的创始人与长期领导人，被视为「批判理论」（critical theory）的命名者。他在1931年接任社会研究所所长，1937年发表《传统理论与批判理论》，划定了与实证主义「传统理论」相对立的批判理论纲领：即检视社会整体、坚持自我反思并以人类解放为旨趣。其与阿多诺合著的《启蒙辩证法》（1944）深刻批判启蒙理性如何退化为支配与极权，是20世纪批判理论的奠基文本。",
+        works: [
+            "Traditional and Critical Theory (《传统理论与批判理论》, 1937)",
+            "Dialectic of Enlightenment (《启蒙辩证法》, 1944/1947, 与阿多诺合著)",
+            "Eclipse of Reason (《理性的狡计》/《工具理性批判》, 1947)",
+            "Critical Theory: Selected Essays (《批判理论：论文选》, 1972)",
+            "Dawn and Decline: Notes 1926–1931 (1978)"
+        ],
+        research: [
+            {
+                title: "Traditional and Critical Theory (传统理论与批判理论)",
+                year: "1937",
+                method: "方法论与认识论批判：对照实证主义「传统理论」阐述批判理论的立场。",
+                sample: "对实证科学观与马克思主义理论传统的哲学反思",
+                conclusion: "传统理论把社会当作可被客观观察的对象，追求与自然规律类似的定律；批判理论则把社会整体作为批判对象，承认知识的社会历史条件，并以解放与自我反思为旨趣。批判理论不满足于解释世界，而致力于诊断并超越支配性的社会关系。",
+                verified: true
+            },
+            {
+                title: "Dialectic of Enlightenment (启蒙辩证法)",
+                year: "1944（手稿）/1947（出版）",
+                method: "哲学—历史批判：追溯启蒙理性的自我异化过程（与阿多诺合作）。",
+                sample: "启蒙以来的西方思想史、神话、奥德赛、康德与萨德、反犹主义",
+                conclusion: "启蒙本以祛除神话、支配自然为使命，却倒退回新的神话与支配：工具理性把一切（包括人）都化约为可计算的对象，理性自身被工具化，最终导致极权与奥斯维辛。「启蒙的自我摧毁」表明，理性若脱离价值反思就会成为压迫工具。",
+                verified: true
+            },
+            {
+                title: "Eclipse of Reason: Instrumental Reason Critique (工具理性批判)",
+                year: "1947",
+                method: "哲学批判：分析理性从「客观理性」到「主观工具理性」的退化。",
+                sample: "现代科学、技术、管理与政治中的理性形态",
+                conclusion: "启蒙后的理性退化为「工具理性」（instrumental reason）：只关心手段的有效性而不反思目的与价值，导致意义丧失与支配的合理化。霍克海默主张恢复批判的、实质的理性，以抵抗技术统治。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 13,
+        name: "Theodor W. Adorno",
+        nameEn: "西奥多·阿多诺",
+        school: "Critical Theory",
+        birth: 1903, death: 1969,
+        nationality: "Germany",
+        activeStart: 1930, activeEnd: 1969,
+        bio: "德国哲学家、社会学家与音乐理论家，法兰克福学派核心成员。他系统批判「文化工业」（culture industry）如何制造伪个性与顺从，与霍克海默合著《启蒙辩证法》；主持「权威人格」的大型实证研究（1950），并提出「否定的辩证法」（negative dialectics）以对抗同一性思维。其艺术理论（尤其对勋伯格音乐的讨论）强调现代艺术作为否定的真理载体。",
+        works: [
+            "Dialectic of Enlightenment (《启蒙辩证法》, 1944/1947, 与霍克海默合著)",
+            "The Authoritarian Personality (《权威人格》, 1950, 合著)",
+            "Minima Moralia (《最低限度的道德》, 1951)",
+            "Negative Dialectics (《否定的辩证法》, 1966)",
+            "Aesthetic Theory (《美学理论》, 1970, 遗著)",
+            "The Culture Industry: Selected Essays (《文化工业》文集, 1991)",
+            "The Stars Down to Earth (1994, 遗著)"
+        ],
+        research: [
+            {
+                title: "Culture Industry Critique (文化工业批判)",
+                year: "1944–1960s",
+                method: "文化批评与理论分析：剖析大众文化的生产逻辑与意识形态功能。",
+                sample: "好莱坞电影、流行音乐、广告等大众文化产品",
+                conclusion: "文化工业把艺术标准化为可复制的商品，制造「伪个性化」与同质化：它用娱乐与消遣规训大众，使其适应现存秩序、放弃批判与自主思考。文化工业是「启蒙辩证法」在娱乐领域的延伸——通过操纵而实现社会控制。",
+                verified: true
+            },
+            {
+                title: "The Authoritarian Personality (权威人格研究)",
+                year: "1950",
+                method: "大规模实证研究：结合量表测量（F量表、反犹/民族中心主义量表）、访谈与投射技术。",
+                sample: "美国约2000名白人中下层受访者的态度与人格数据",
+                conclusion: "存在一种「权威人格」（authoritarian personality）：表现为对权威的服从、对弱者的支配倾向、刻板僵化、反犹与民族中心主义，根源与严格的教养和压抑性家庭结构相关。权威人格与潜在的法西斯主义倾向相联系，为批判理论提供了经验佐证。",
+                verified: true
+            },
+            {
+                title: "Negative Dialectics (否定的辩证法)",
+                year: "1966",
+                method: "哲学批判：批判黑格尔式同一性辩证法与概念化对非同一性的遮蔽。",
+                sample: "对康德、黑格尔、马克思、海德格尔等哲学体系的批判分析",
+                conclusion: "阿多诺主张「否定的辩证法」：反对把对象还原为概念、把差异抹平为同一的同一性思维。哲学应保持对非同一性（the non-identical）的开放，承认概念与对象之间的裂缝。这一立场既是对现代极权同质化的哲学抵抗，也是对乌托邦式总体性的警惕。",
+                verified: true
+            },
+            {
+                title: "Critique of Fascism and the 'Wrong Life' (法西斯主义批判与虚假生活)",
+                year: "1951–1966",
+                method: "文化—道德批判（以箴言格言体表达）：考察日常生活中的支配与异化。",
+                sample: "战后大众社会的日常经验、消费、言语与情感",
+                conclusion: "《最低限度的道德》主张在「虚假的生活中不存在正确的生活」（wrong life cannot be lived rightly）：即便看似私密的日常生活也渗透着社会支配。批判理论因此必须介入最细微的日常，揭示幸福承诺背后的异化。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 14,
+        name: "Herbert Marcuse",
+        nameEn: "赫伯特·马尔库塞",
+        school: "Critical Theory",
+        birth: 1898, death: 1979,
+        nationality: "Germany / United States",
+        activeStart: 1930, activeEnd: 1979,
+        bio: "德裔美国哲学家与社会理论家，法兰克福学派「激进左翼」代表，20世纪60年代欧美新左派与学生运动的「理论教父」。其《单向度的人》（1964）批判发达工业社会通过技术理性、消费主义与虚假需要压制批判性与否定性；《爱欲与文明》（1955）结合弗洛伊德与马克思，提出「非压抑性文明」的解放构想。晚年主张艺术与想象作为解放潜能，深刻影响了1968年运动与后殖民、生态等批判思潮。",
+        works: [
+            "Reason and Revolution: Hegel and the Rise of Social Theory (《理性与革命》, 1941)",
+            "Eros and Civilization (《爱欲与文明》, 1955)",
+            "One-Dimensional Man (《单向度的人》, 1964)",
+            "An Essay on Liberation (《论解放》, 1969)",
+            "Counterrevolution and Revolt (《反革命与造反》, 1972)",
+            "The Aesthetic Dimension (《审美之维》, 1978)"
+        ],
+        research: [
+            {
+                title: "One-Dimensional Man (单向度的人)",
+                year: "1964",
+                method: "社会—哲学批判：分析发达工业社会如何消解否定性。",
+                sample: "美国等发达资本主义社会的技术、消费、语言与政治",
+                conclusion: "发达工业社会通过技术理性与消费主义实现总体性控制：它满足「虚假需要」，把对立与否定性消解为「单向度」（one-dimensionality），使个体丧失超越现状的批判想象。社会批判的潜能被吸纳，个体成为被操纵的「单向度的人」，自由与幸福被技术合理化的顺从所替代。",
+                verified: true
+            },
+            {
+                title: "Eros and Civilization (爱欲与文明)",
+                year: "1955",
+                method: "理论综合：结合弗洛伊德精神分析与马克思主义，探讨文明与压抑的关系。",
+                sample: "弗洛伊德的文明观与现代性条件下的性压抑",
+                conclusion: "在富足社会中，为生产秩序所需的「额外压抑」（surplus repression）已不再必要；人类有可能走向「非压抑性文明」，让「爱欲」（Eros）而非支配性劳动组织生活。马尔库塞由此把性/爱欲的解放与政治、社会解放联结起来，为批判理论注入乌托邦与审美维度。",
+                verified: true
+            },
+            {
+                title: "Technological Rationality and Repressive Desublimation (技术理性与压抑性去升华)",
+                year: "1964–1969",
+                method: "概念批判：分析技术理性与消费社会的支配机制。",
+                sample: "技术、管理、性化广告与大众文化中的「解放」表象",
+                conclusion: "现代社会的「解放」往往是「压抑性去升华」（repressive desublimation）：性欲与欲望被商业化地释放，却服务于资本积累与顺从，并未带来真正自由。技术理性把支配合理化为效率，使批判意识被管理化、碎片化。",
+                verified: true
+            },
+            {
+                title: "Art, Imagination and Liberation (艺术与解放)",
+                year: "1969–1978",
+                method: "美学—政治分析：探讨艺术如何承载否定与解放潜能。",
+                sample: "先锋艺术、现代主义作品与「大拒绝」（great refusal）",
+                conclusion: "艺术凭借审美形式超越现存现实，保存对乌托邦的想象，构成「大拒绝」的潜能。马尔库塞主张真正的艺术是「政治性的」，它通过形式的否定性揭示现存秩序的压抑，为解放提供感性基础。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 15,
+        name: "Jürgen Habermas",
+        nameEn: "尤尔根·哈贝马斯",
+        school: "Critical Theory",
+        birth: 1929, death: null,
+        nationality: "Germany",
+        activeStart: 1960, activeEnd: 2026,
+        bio: "德国哲学家与社会理论家，法兰克福学派第二代最具影响力的领袖，20世纪后期最重要的批判理论家之一。他提出「公共领域」（public sphere）理论、以「沟通行动理论」（theory of communicative action）重建批判理论的规范性基础，并提出「商谈伦理学」与「生活世界殖民化」命题。他试图以语言与沟通理性取代工具理性，为社会批判奠定规范根基，其思想贯通社会学、哲学、法理学与政治理论。",
+        works: [
+            "The Structural Transformation of the Public Sphere (《公共领域的结构转型》, 1962)",
+            "Knowledge and Human Interests (《知识与人类旨趣》, 1968)",
+            "Legitimation Crisis (《合法性危机》, 1973)",
+            "The Theory of Communicative Action (《交往行为理论》, 1981)",
+            "The Philosophical Discourse of Modernity (《现代性的哲学话语》, 1985)",
+            "Between Facts and Norms (《在事实与规范之间》, 1992)",
+            "The Theory of Communicative Competence / On the Pragmatics of Communication (1980s)"
+        ],
+        research: [
+            {
+                title: "The Public Sphere (公共领域的结构转型)",
+                year: "1962",
+                method: "历史—结构分析：考察18世纪以来资产阶级公共领域的兴起、结构与衰落。",
+                sample: "18世纪欧洲咖啡馆、沙龙、报纸与舆论形成的公共讨论空间",
+                conclusion: "公共领域是介于国家与私人领域之间、公民理性讨论公共事务的场域，是民主合法性的基础。但现代大众媒介、广告与国家干预导致公共领域「重新封建化」（refeudalization）——舆论被操纵、批判性讨论被消费与行政所侵蚀，公共领域趋于退化。",
+                verified: true
+            },
+            {
+                title: "Theory of Communicative Action (交往行为理论)",
+                year: "1981",
+                method: "语言哲学与语用学分析：以沟通行动为基础重建社会理论。",
+                sample: "日常语言互动中的理解与共识达成（对话语用学分析）",
+                conclusion: "行动可分为工具行动（strategic/instrumental，以成功为导向）与沟通行动（communicative，以相互理解为导向）。社会协调的规范性基础是沟通理性（communicative rationality），其有效性基于可辩护的言语行为。现代社会的问题在于「系统」（经济与国家）对「生活世界」（文化、社会整合、人格）的殖民化——工具逻辑侵入并扭曲日常沟通与意义生产。",
+                verified: true
+            },
+            {
+                title: "Knowledge and Human Interests (知识与人类旨趣)",
+                year: "1968",
+                method: "认识论批判：揭示知识生产与人类旨趣（interests）的关联。",
+                sample: "经验—分析科学、历史—诠释科学、批判社会科学三大知识类型",
+                conclusion: "人类认识受三种旨趣引导：技术旨趣（支配自然，对应经验—分析科学）、实践旨趣（相互理解，对应历史—诠释科学）、解放旨趣（摆脱支配，对应批判社会科学）。批判理论以解放旨趣为指引，既区别于实证主义也区别于纯诠释学。",
+                verified: true
+            },
+            {
+                title: "Legitimation Crisis (合法性危机)",
+                year: "1973",
+                method: "系统—功能分析：考察晚期资本主义国家的正当性危机。",
+                sample: "晚期资本主义国家的经济、行政、合法性与动机系统",
+                conclusion: "晚期资本主义面临多重危机倾向：经济危机、合理性危机、合法性危机与动机危机。当国家干预经济并承担福利职能时，其行政系统难以同时满足积累要求与合法化要求，导致「合法化危机」——国家因无法兑现承诺而失去公民认同。",
+                verified: true
+            },
+            {
+                title: "Discourse Ethics and Deliberative Democracy (商谈伦理学与协商民主)",
+                year: "1983–1992",
+                method: "规范哲学建构：以理想沟通情境论证道德的普遍有效性。",
+                sample: "法律与政治领域中的协商与论证程序",
+                conclusion: "规范的有效性来自「理想言谈情境」中的自由论证而非权威或私利；「商谈伦理原则」主张只有所有受影响者在自由平等的讨论中一致同意的规范才具正当性。据此，民主应理解为协商（deliberation）——公民通过公共论证形成意见与意志，宪法与法律从「事实与规范之间」获得合法性。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 16,
+        name: "Walter Benjamin",
+        nameEn: "瓦尔特·本雅明",
+        school: "Critical Theory",
+        birth: 1892, death: 1940,
+        nationality: "Germany",
+        activeStart: 1920, activeEnd: 1940,
+        bio: "德国文化批评家、哲学家与文学理论家，法兰克福学派的重要同路人（其思想对批判理论影响深远）。其《机械复制时代的艺术作品》（1935/1936）提出艺术「灵光」（aura）在技术复制时代消逝的著名命题，探讨艺术从仪式性转向政治性的命运；其未完成的《拱廊街计划》以碎片化的辩证意象分析19世纪巴黎的商品文化与现代性。1940年在逃往西班牙途中自杀身亡。",
+        works: [
+            "The Work of Art in the Age of Mechanical Reproduction (《机械复制时代的艺术作品》, 1935/1936)",
+            "One-Way Street (《单向街》, 1928)",
+            "Illuminations (《启迪：本雅明文选》, 1955, 遗著文集)",
+            "The Arcades Project (《拱廊街计划》, 1982, 遗著)",
+            "The Origin of German Tragic Drama (《德意志悲苦剧的起源》, 1928)"
+        ],
+        research: [
+            {
+                title: "The Work of Art in the Age of Mechanical Reproduction (机械复制时代的艺术作品)",
+                year: "1935–1936",
+                method: "文化理论与历史分析：考察复制技术对艺术本体地位的影响。",
+                sample: "摄影、电影等机械复制艺术与绘画等传统艺术的对比",
+                conclusion: "机械复制使艺术品不再有唯一的「本真性」与「灵光」（aura）——其独特的历史在场感与仪式性随之消逝。艺术因而从以崇拜为核心的仪式价值转向以展示与政治为核心的实践价值：复制技术既带来艺术的大众民主化，也可能被利用为「政治审美化」（如法西斯的政治美学化），因此本雅明主张艺术应「政治化」以对抗法西斯主义。",
+                verified: true
+            },
+            {
+                title: "Theses on the Philosophy of History / The Angel of History (历史哲学与「历史天使」)",
+                year: "1940（遗著）",
+                method: "哲学—历史批判：以辩证意象反思线性进步观。",
+                sample: "历史唯物主义与神学意象（克利的画作「新天使」）",
+                conclusion: "本雅明批判盲目的「进步」神话：历史并非必然进步，而是连续灾难的堆积。「历史天使」背对未来、面朝废墟，暗示历史唯物主义应「倒转」——把过去被压迫者的希望重新激活。这一论述成为对进步主义史观最具冲击力的批判之一。",
+                verified: true
+            },
+            {
+                title: "The Arcades Project: Dialectical Images of Modernity (拱廊街计划：现代性的辩证意象)",
+                year: "1927–1940（未完成）",
+                method: "蒙太奇式文化考古：以片段、引文与「辩证意象」重构19世纪巴黎商品文化。",
+                sample: "19世纪巴黎拱廊街、百货商店、展览、时尚与都市空间",
+                conclusion: "本雅明以碎片化的档案手法分析资本主义现代性的乌托邦与废墟：商品、时尚与消费既是进步的许诺，又凝固为压迫性的「梦幻」。通过把现代性作为「辩证意象」把握，他试图唤醒被遗忘的革命潜能，提供了一种非线性的现代性批判路径。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 17,
+        name: "Erich Fromm",
+        nameEn: "埃里希·弗洛姆",
+        school: "Critical Theory",
+        birth: 1900, death: 1980,
+        nationality: "Germany / United States",
+        activeStart: 1930, activeEnd: 1980,
+        bio: "德裔美国精神分析学家与社会心理学家，法兰克福学派成员（后因理论分歧逐渐疏离）。他开创「人本主义精神分析」，以《逃避自由》（1941）分析现代社会个体自由与孤独焦虑的矛盾，指出人们倾向于逃避自由（趋向极权、施虐受虐或机械趋同）；又提出「健全社会」与爱的艺术等思想，主张以社会变革克服异化与心理病态。",
+        works: [
+            "Escape from Freedom (《逃避自由》, 1941)",
+            "Man for Himself (《为自己的人》, 1947)",
+            "The Sane Society (《健全的社会》, 1955)",
+            "The Art of Loving (《爱的艺术》, 1956)",
+            "Marx's Concept of Man (《马克思关于人的概念》, 1961)",
+            "The Anatomy of Human Destructiveness (《人类破坏性的剖析》, 1973)"
+        ],
+        research: [
+            {
+                title: "Escape from Freedom (逃避自由)",
+                year: "1941",
+                method: "社会心理学与精神分析结合：考察现代社会自由与焦虑的心理动力。",
+                sample: "中世纪至现代的个体化进程，以及极权主义、纳粹支持者的心理结构",
+                conclusion: "现代性使个体摆脱传统束缚获得「消极自由」，却也使其陷入孤独与无力感。人们由此倾向「逃避自由」：通过臣服于极权（autocratic submission）、施虐—受虐关系，或「机械趋同」（automaton conformity，与大众同化、丧失自我）来逃避责任。健全的「积极自由」应以自发的爱、创造与自我实现为路径。",
+                verified: true
+            },
+            {
+                title: "The Sane Society (健全的社会)",
+                year: "1955",
+                method: "社会诊断与批判：从精神分析角度评估现代社会的病态。",
+                sample: "现代资本主义社会的消费、劳动、政治与家庭",
+                conclusion: "弗洛姆提出「病态社会」（pathological society）概念：若社会结构普遍压抑人类的基本需要，则其成员会感到空虚、异化而「正常地」病态。他认为现代工业社会盛行市场化的「占有型存在」，需走向以创造、爱与共同体为基础的「健全社会」才能实现心理健康。",
+                verified: true
+            },
+            {
+                title: "Humanistic Psychoanalysis and the Art of Loving (人本主义精神分析与爱的艺术)",
+                year: "1947–1956",
+                method: "理论建构：把精神分析与社会批判结合，探讨健全人格与亲密关系。",
+                sample: "爱、创造性工作与成熟人格的理想形态",
+                conclusion: "弗洛姆区分成熟之爱与依附、占有式之爱，主张爱是一种需要学习与培育的「能力」而非偶然情感；健全人格应以生产性（productive orientation）取代市场化的占有取向。其思想试图在个体心理与社会结构之间建立桥梁，对现代心理健康与亲密关系研究影响深远。",
+                verified: true
+            },
+            {
+                title: "The Anatomy of Human Destructiveness (人类破坏性的剖析)",
+                year: "1973",
+                method: "精神分析与历史案例研究：考察人类暴力与破坏性的类型与根源。",
+                sample: "希特勒等极权人物的心理史、战争与暴力案例",
+                conclusion: "弗洛姆区分「良性攻击」（防卫性、为生存所需）与「恶性攻击」（以破坏为乐的施虐—恋死癖，源于性格结构与异化社会条件）。他主张大规模毁灭并非生物本能，而是特定社会结构与异化的产物，因此可以通过社会变革与性格改造加以遏制。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 18,
+        name: "George Herbert Mead",
+        nameEn: "乔治·赫伯特·米德",
+        school: "Symbolic Interactionism",
+        birth: 1863, death: 1931,
+        nationality: "United States",
+        activeStart: 1895, activeEnd: 1931,
+        bio: "美国哲学家、社会心理学家与实用主义者，芝加哥大学著名教授，符号互动论（symbolic interactionism）的思想奠基人（该流派名称后由布鲁默正式提出）。其生前未出版著作，其课堂笔记经学生整理为《心灵、自我与社会》（1934）。他提出「自我源于社会互动」、「主我/客我」（I/Me）、「概化他人」（generalized other）与「角色扮演」等核心概念，奠定了以符号与互动解释心灵与社会的微观社会学传统。",
+        works: [
+            "Mind, Self, and Society (《心灵、自我与社会》, 1934, 遗著)",
+            "The Philosophy of the Present (《当下的哲学》, 1932, 遗著)",
+            "Movements of Thought in the Nineteenth Century (1936, 遗著)",
+            "The Philosophy of the Act (《行动哲学》, 1938, 遗著)"
+        ],
+        research: [
+            {
+                title: "The Social Self and the 'I' and 'Me' (社会性自我与主我/客我)",
+                year: "1934（课堂讲稿整理出版）",
+                method: "理论建构：以社会行为主义与实用主义分析自我形成。",
+                sample: "自我（self）作为社会互动的产物（概念性分析）",
+                conclusion: "自我并非先天存在，而是在社会互动中形成的。米德区分「客我」（me，他人态度内化而成的社会化的自我）与「主我」（I，回应社会情境的主动反应性自我）；行动先由I发起、再由me评价，二者互动构成完整的自我。自我因此是社会的反映，又保留个体的创造性与反思性。",
+                verified: true
+            },
+            {
+                title: "Stages of Self-Development and the Generalized Other (自我发展三阶段与概化他人)",
+                year: "1934",
+                method: "发展分析：描述儿童通过互动获得自我能力的阶段。",
+                sample: "儿童的游戏（play）、组织化游戏（game）与群体生活",
+                conclusion: "自我发展经历三个阶段：玩耍期（play，扮演单一他人角色，如扮演母亲）、游戏期（game，理解并遵守多人协作的规则与角色）、以及「概化他人」（generalized other）阶段——个体内化社会共同体的一般态度与规则。通过概化他人，个体获得抽象的社会规范并形成稳定的自我认同。",
+                verified: true
+            },
+            {
+                title: "Mind, Language and Significant Symbols (心灵、语言与有意义的符号)",
+                year: "1934",
+                method: "理论分析：从姿态沟通到语言符号的演化理解心灵起源。",
+                sample: "动物姿态沟通与人类语言符号（有意义姿态）的对比",
+                conclusion: "心灵（mind）产生于社会互动中的符号沟通：当「姿态」被赋予共享意义（gesture 成为「有意义的符号」）时，个体能以他人的立场想象自己的姿态并预演反应。语言因此使个体能够「把自己当作对象」、进行内在思考，心灵是社会的产物而非孤立大脑的功能。",
+                verified: true
+            },
+            {
+                title: "Role-Taking and Symbolic Interaction (角色扮演与符号互动)",
+                year: "1934",
+                method: "理论建构：确立符号互动论的基本机制。",
+                sample: "日常互动中个体间的角色想象与意义协调",
+                conclusion: "有效的社会互动依赖「角色扮演」（role-taking）——个体设想并采用他人的视角来理解情境。通过符号（语言、姿态）协调行动，互动双方共同定义情境并调整行为。这一机制为后来的符号互动论（布鲁默）提供了核心命题：人们基于事物的意义行动，而意义在互动中被建构与修改。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 19,
+        name: "Charles Horton Cooley",
+        nameEn: "查尔斯·霍顿·库利",
+        school: "Symbolic Interactionism",
+        birth: 1864, death: 1929,
+        nationality: "United States",
+        activeStart: 1895, activeEnd: 1929,
+        bio: "美国早期社会学家，密歇根大学教授，芝加哥学派的先驱。他提出著名的「镜中我」（looking-glass self）理论——自我来自他人对我们反应的想象性判断；并提出「首属群体」（primary group）概念，强调家庭、玩伴等亲密面对面的初级群体如何塑造个体的人格与社会性。其思想为符号互动论（米德、布鲁默）提供了重要基础。",
+        works: [
+            "Human Nature and the Social Order (《人性与社会秩序》, 1902)",
+            "Social Organization: A Study of the Larger Mind (《社会组织》, 1909)",
+            "Social Process (《社会过程》, 1918)",
+            "Sociological Theory and Social Research (1930, 遗著)"
+        ],
+        research: [
+            {
+                title: "The Looking-Glass Self (镜中我)",
+                year: "1902",
+                method: "理论分析与概念建构：从日常生活经验推理自我形成的机制。",
+                sample: "个体想象他人对自己的看法与评价的过程",
+                conclusion: "自我（self）是社会性的，通过「镜中我」形成：个体（1）想象自己在他人眼中的形象，（2）想象他人如何评价这一形象，（3）据此产生自我感受（骄傲或羞愧）。因此「我不是我想象中的我，也不是别人眼中的我，而是我自以为的别人眼中的我」——自我始终依赖社会互动与想象。",
+                verified: true
+            },
+            {
+                title: "Primary Groups (首属群体)",
+                year: "1909",
+                method: "概念建构与描述分析：识别塑造个体的基本社会单位。",
+                sample: "家庭、儿童玩伴群体、邻里等亲密面对面群体",
+                conclusion: "首属群体是以亲密、面对面、持久的接触为特征的初级群体，是「人性的摇篮」：个体在其中形成自我意识、道德感与归属感。首属群体先于正式制度塑造人格，是社会团结与人格发展最根本的场域。",
+                verified: true
+            },
+            {
+                title: "Social Process and the 'Larger Mind' (社会过程与「更大的心灵」)",
+                year: "1909–1918",
+                method: "有机论与互动分析：把社会视为通过沟通形成的整体过程。",
+                sample: "沟通、同情与公共意见的形成",
+                conclusion: "社会是「更大的心灵」（larger mind）——通过语言与沟通，无数个体心灵相互渗透、共享意义而形成的社会心灵。库利强调同情（sympathy）与沟通是社会整合的心理纽带，社会过程是持续的互动与心智交流，而非仅由物质结构决定。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 20,
+        name: "Herbert Blumer",
+        nameEn: "赫伯特·布鲁默",
+        school: "Symbolic Interactionism",
+        birth: 1900, death: 1987,
+        nationality: "United States",
+        activeStart: 1925, activeEnd: 1987,
+        bio: "美国社会学家，芝加哥学派的代表，1937年正式提出并命名「符号互动论」（symbolic interactionism），把米德的思想系统化为一套完整的社会学视角与方法。他在《符号互动论：视角与方法》（1969）中阐明其三大前提与「探索性研究」方法论，强调以参与观察等质性方法研究真实互动，反对机械的变量测量，长期主导芝加哥学派并影响后来的微观社会学。",
+        works: [
+            "Symbolic Interactionism: Perspective and Method (《符号互动论：视角与方法》, 1969)",
+            "Movies and Conduct (《电影与行为》, 1933)",
+            "Industrialization as an Agent of Social Change (1990, 遗著)",
+            "Symbolic Interaction and Social Problems (1966, 论文)"
+        ],
+        research: [
+            {
+                title: "Three Premises of Symbolic Interactionism (符号互动论三前提)",
+                year: "1969",
+                method: "理论阐释与系统化：把米德思想提炼为互动论的纲领性命题。",
+                sample: "日常互动中的意义、解释与行动",
+                conclusion: "布鲁默提出符号互动论的三个基本前提：（1）人们依据事物对其的意义而行动；（2）这些意义产生于人与他人的社会互动；（3）这些意义在个体对情境的解释处理过程中被使用并修改。由此，社会被视为持续进行、由互动建构的过程，而非静态结构。",
+                verified: true
+            },
+            {
+                title: "Exploratory and Inspection Methodology (探索性研究与检视方法)",
+                year: "1969",
+                method: "方法论主张：倡导以参与观察、深度访谈等弹性策略研究真实互动。",
+                sample: "对自然情境中的群体生活进行开放探索（如街区、青少年群体）",
+                conclusion: "布鲁默反对把社会学简化为变量测量与统计分析，主张研究应从「探索」（exploratory）开始——通过直接观察与访谈获得对研究对象世界的「亲密熟悉」；再用「检视」（inspection）梳理情境的要素与关系。这一方法使互动论研究强调理解行动者的意义世界。",
+                verified: true
+            },
+            {
+                title: "The Interpretive Process in Joint Action (联合行动中的诠释过程)",
+                year: "1969",
+                method: "过程分析：把社会秩序解释为参与者共同建构的「联合行动」。",
+                sample: "市场、集体行为、社会运动等由无数互动汇聚而成的行动",
+                conclusion: "宏观社会现象（制度、组织、社会运动）本质上是由无数微观「联合行动」（joint action）构成的，而每个联合行动都经由参与者对彼此姿态的诠释与协调而展开。因此社会结构不是脱离互动的独立实体，而是被参与者不断重建的过程。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 21,
+        name: "Erving Goffman",
+        nameEn: "欧文·戈夫曼",
+        school: "Symbolic Interactionism",
+        birth: 1922, death: 1982,
+        nationality: "Canada / United States",
+        activeStart: 1950, activeEnd: 1982,
+        bio: "加拿大裔美国社会学家，20世纪微观社会学（互动论）的代表人物。他以「拟剧论」（dramaturgical analysis）把日常互动比作舞台表演，提出「印象管理」、「前台/后台」等概念；以《污名》（1963）分析受损身份的「信息控制」；以《收容所》（1961）基于精神病院参与观察提出「全控机构」（total institution）理论；晚年以《框架分析》（1974）考察经验的「框架」（frames）。其工作深刻影响社会心理学、社会问题与互动社会学。",
+        works: [
+            "The Presentation of Self in Everyday Life (《日常生活中的自我呈现》, 1959)",
+            "Asylums: Essays on the Social Situation of Mental Patients (《收容所》, 1961)",
+            "Stigma: Notes on the Management of Spoiled Identity (《污名：受损身份管理札记》, 1963)",
+            "Interaction Ritual: Essays on Face-to-Face Behavior (《互动仪式》, 1967)",
+            "Frame Analysis: An Essay on the Organization of Experience (《框架分析》, 1974)",
+            "Gender Advertisements (《性别广告》, 1979)"
+        ],
+        research: [
+            {
+                title: "Dramaturgical Analysis: The Presentation of Self (拟剧论与自我呈现)",
+                year: "1959",
+                method: "参与观察与隐喻分析：以戏剧隐喻（演员、舞台、剧本）研究面对面互动。",
+                sample: "日常社会情境中的互动表演（餐馆、办公室、社交场合等观察案例）",
+                conclusion: "日常互动如同舞台表演：个体在前台（front stage）向观众呈现精心管理的自我形象，在后台（back stage）则卸下表演。为维持可信形象，个体进行「印象管理」（impression management），通过姿态、言语、道具与场景布置说服他人接受自己的定义。社会互动因此是持续的「共同维持剧本」的过程。",
+                verified: true
+            },
+            {
+                title: "Asylums and the Total Institution (收容所与全控机构)",
+                year: "1961",
+                method: "参与观察民族志：在华盛顿圣伊丽莎白医院（精神病人收容所）担任助理研究员进行长期田野观察。",
+                sample: "圣伊丽莎白医院的精神病患者与工作人员日常（田野笔记）",
+                conclusion: "全控机构（total institution）把成员与外界隔绝、统一管理其生活的所有方面，通过「改造自我」（mortification）——剥夺身份象征、强制服从、标签化——重塑个体的自我与自我概念。病人的「疯狂」部分由机构的制度安排所生产，机构成为「自我管理的机器」。",
+                verified: true
+            },
+            {
+                title: "Stigma and the Management of Spoiled Identity (污名与受损身份管理)",
+                year: "1963",
+                method: "概念分析与个案资料：结合自传、田野笔记与文学资料考察被污名者的处境。",
+                sample: "身体残疾、同性恋者、前罪犯、少数族裔等「受损身份」群体",
+                conclusion: "污名（stigma）使个体「不被信任」而受损其社会身份。被污名者通过「信息控制」（information control）管理可见性（如掩饰、透露、选择性展演），并采用「覆盖」「归因」等策略维护自尊。污名不仅是个人属性，更是社会互动中强加的标记与期望，深刻影响机会与人际关系。",
+                verified: true
+            },
+            {
+                title: "Interaction Ritual and Face-Work (互动仪式与面子功夫)",
+                year: "1967",
+                method: "微观分析：研究面对面互动中维持「脸面」（face）的仪式性行为。",
+                sample: "日常问候、道歉、恭维、回避等互动仪式",
+                conclusion: "互动遵循仪式性规则：参与者共同维护彼此的「面子」以维持互动秩序。通过「面子功夫」（face-work），个体避免丢脸、给对方台阶，从而维持社会关系与自我形象。这些看似琐碎的礼节是社会秩序在微观层面的再生产机制。",
+                verified: true
+            },
+            {
+                title: "Frame Analysis (框架分析)",
+                year: "1974",
+                method: "现象学—互动分析：考察个体如何定义和组织经验情境。",
+                sample: "日常对话、玩笑、戏剧、电视报道等被「框定」的经验",
+                conclusion: "经验总是经由「框架」（frames）被组织与理解：框架定义「这里正在发生什么」，规定角色、规则与意义（如游戏、仪式、表演各有其框架）。通过框架的建立、转换与再框定，个体协调行动并共享对情境的定义，互动得以有序进行。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 22,
+        name: "Alfred Schutz",
+        nameEn: "阿尔弗雷德·舒茨",
+        school: "Phenomenological Sociology",
+        birth: 1899, death: 1959,
+        nationality: "Austria / United States",
+        activeStart: 1930, activeEnd: 1959,
+        bio: "奥地利社会哲学家，现象学社会学（phenomenological sociology）的奠基人。他把胡塞尔的现象学引入社会学，聚焦「日常生活世界」（life-world）的构成：社会现实以常识（common-sense）的「自然态度」为基础，经由「典型化」（typification）与「知识库存」（stock of knowledge）被主体间地建构。其《社会世界的现象学》（1932）为理解社会行动的主观意义提供了哲学基础，深刻影响伯格、卢克曼与常人方法学（加芬克尔）。",
+        works: [
+            "The Phenomenology of the Social World (《社会世界的现象学》, 1932)",
+            "Collected Papers I–III (《文集》, 1962–1966, 遗著)",
+            "The Structures of the Life-World (《生活世界的结构》, 1973/1989, 与卢克曼合著, 遗著)",
+            "On Phenomenology and Social Relations (1970, 遗著)"
+        ],
+        research: [
+            {
+                title: "The Life-World and Natural Attitude (日常生活世界与自然态度)",
+                year: "1932",
+                method: "现象学分析：从意识体验出发考察社会现实的基本构成。",
+                sample: "日常生活中的「自然态度」（common-sense）经验",
+                conclusion: "社会现实以「日常生活世界」（life-world）为根基——在其中，个体以「自然态度」把世界当作理所当然、客观给定的现实。日常经验通过「典型化」被组织：人们依据先前的知识把新经验归入熟悉的类型，从而得以高效地解释与行动。",
+                verified: true
+            },
+            {
+                title: "Subjective Meaning and Social Action (主观意义与社会行动)",
+                year: "1932",
+                method: "现象学—诠释分析：把韦伯「理解」概念现象学化。",
+                sample: "行动者赋予其行动的主观意义与动机",
+                conclusion: "社会世界的意义由行动者的主观意义构成：理解他人须把握其「行动的主观意义」及其动机（「为了」动机与「因为」动机）。舒茨以此深化韦伯的诠释社会学，把「理解」建立在对意义建构过程的细致描述之上。",
+                verified: true
+            },
+            {
+                title: "Intersubjectivity and the Social Worlds (主体间性与社会世界)",
+                year: "1932",
+                method: "现象学分析：考察他人经验如何被构成为「共同世界」。",
+                sample: "同时代人世界、前人世界、后继者世界与共同世界",
+                conclusion: "主体间性（intersubjectivity）是社会现实的基础：个体通过「视角互换」设想他人也拥有类似经验，由此建构共同世界（mitwelt）。社会世界分化为前人世界、共同世界、同时代世界与后继者世界，每一层都有其意义建构的方式，个体在其中以不同方式与他人相遇。",
+                verified: true
+            },
+            {
+                title: "Stock of Knowledge and Typification (知识库存与典型化)",
+                year: "1932–1966",
+                method: "现象学—知识社会学分析：考察常识知识如何被使用与累积。",
+                sample: "个体用于解释情境的日常知识库存（语言、类型、规则）",
+                conclusion: "个体持有一整套「知识库存」（stock of knowledge）——由过去经验沉积的典型、规则与技巧——用以解释当前情境并预期他人反应。知识库存是主体间共享的、可学习的，使日常生活保持连贯与可预期；其「理所当然性」正是社会秩序在意识层面的根基。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 23,
+        name: "Peter L. Berger",
+        nameEn: "彼得·伯格",
+        school: "Phenomenological Sociology",
+        birth: 1929, death: 2017,
+        nationality: "United States (born in Austria)",
+        activeStart: 1955, activeEnd: 2017,
+        bio: "奥地利裔美国社会学家，现象学社会学与知识社会学的代表人物。他与卢克曼合著的《现实的社会建构》（1966）提出「社会现实经由外化—客观化—内化的辩证过程而建构」的经典框架，成为建构主义社会学的奠基文本；其《神圣的穹顶》（1967）以知识社会学分析宗教的功能；《社会学的邀请》（1963）则使社会学面向大众普及。他一生关注现代性、宗教与多元社会的意义问题。",
+        works: [
+            "Invitation to Sociology: A Humanistic Perspective (《社会学的邀请》, 1963)",
+            "The Social Construction of Reality (《现实的社会建构》, 1966, 与卢克曼合著)",
+            "The Sacred Canopy: Elements of a Sociological Theory of Religion (《神圣的穹顶》, 1967)",
+            "The Homeless Mind: Modernization and Consciousness (《无家可归的心灵》, 1973, 合著)",
+            "A Rumor of Angels: Modern Society and the Rediscovery of the Supernatural (1969)"
+        ],
+        research: [
+            {
+                title: "The Social Construction of Reality (现实的社会建构)",
+                year: "1966",
+                method: "知识社会学与现象学综合：考察日常生活现实如何被社会地建构与维持。",
+                sample: "日常生活的常识现实及其制度化过程",
+                conclusion: "社会现实由三个辩证环节持续建构：外化（externalization，人把主观意义投入世界）、客观化（objectification，制度化产物被体验为外在客观现实）、内化（internalization，个体把客观现实吸收为自身意识）。由此「社会是人的产物，人是社会的产物」——制度看似客观，实为人类活动的沉淀。",
+                verified: true
+            },
+            {
+                title: "Institutionalization and the Reification of Institutions (制度化与制度的物化)",
+                year: "1966",
+                method: "现象学—知识社会学分析：解释制度如何产生并变得「理所当然」。",
+                sample: "习惯化行动逐步沉淀为制度的过程（家庭、法律、宗教等）",
+                conclusion: "重复的习惯化行动通过外化与客观化沉淀为制度：制度向行动者呈现为客观、强制、既定的现实，并通过社会控制与合法化维持其权威。当成员把制度当作自然之物而非人类产物时便发生「物化」（reification）——制度的可变动性被遗忘，其建构性被遮蔽。",
+                verified: true
+            },
+            {
+                title: "The Sacred Canopy: Religion as World-Maintenance (神圣的穹顶：宗教与秩序维持)",
+                year: "1967",
+                method: "知识社会学分析：把宗教理解为合法化与社会秩序维持的机制。",
+                sample: "宗教对现实的定义、合法化与意义供给",
+                conclusion: "宗教充当「神圣的穹顶」——为不确定的社会世界提供超越性的意义与合法化，把偶然事件纳入整体秩序，从而支撑现实的稳定。当现代多元社会削弱传统宗教的垄断地位时，意义体系趋于多元与私人化，个体的「意义危机」随之浮现。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 24,
+        name: "Thomas Luckmann",
+        nameEn: "托马斯·卢克曼",
+        school: "Phenomenological Sociology",
+        birth: 1927, death: 2016,
+        nationality: "Germany / Slovenia",
+        activeStart: 1960, activeEnd: 2016,
+        bio: "德国社会学家，现象学社会学与知识社会学的代表，与伯格合著《现实的社会建构》（1966），与舒茨合作整理《生活世界的结构》（1973/1989）。他以《无形的宗教》（1967）提出「私人化宗教」命题，分析现代性如何把宗教经验从公共制度中剥离、转化为个体的私人意义；其研究始终聚焦日常生活现实、意义建构与现代意识的变迁。",
+        works: [
+            "The Social Construction of Reality (《现实的社会建构》, 1966, 与伯格合著)",
+            "The Invisible Religion: The Problem of Religion in Modern Society (《无形的宗教》, 1967)",
+            "The Structures of the Life-World (《生活世界的结构》, 1973/1989, 与舒茨合著)",
+            "Life-World and Social Realities (《生活世界与社会现实》, 1983, 文集)"
+        ],
+        research: [
+            {
+                title: "The Social Construction of Reality (现实的社会建构)",
+                year: "1966",
+                method: "知识社会学与现象学综合（与伯格合作）：考察日常生活现实的社会建构。",
+                sample: "日常常识现实与制度、合法化、符号体系",
+                conclusion: "社会现实通过外化—客观化—内化的辩证过程被建构与维持；制度经由习惯化沉淀而变得客观，个体经由社会化把它内化为理所当然。现实的社会建构意味着社会秩序既是客观给定的，也是被成员不断再生产的。",
+                verified: true
+            },
+            {
+                title: "The Invisible Religion: Privatized Religion in Modernity (无形的宗教：现代性的私人化宗教)",
+                year: "1967",
+                method: "知识社会学与现代性分析：考察宗教在现代社会的形态转变。",
+                sample: "现代社会的宗教制度、个人信仰与意义寻求",
+                conclusion: "在现代多元社会中，传统宗教制度失去对意义的公共垄断，宗教「私人化」为个体选择的意义体系（无形的宗教）：个人在消费与自由市场中自行建构「终极意义」。宗教从公共制度转向私人领域，成为现代人「意义建构」的主观活动。",
+                verified: true
+            },
+            {
+                title: "The Structures of the Life-World (生活世界的结构)",
+                year: "1973/1989",
+                method: "现象学分析（基于舒茨遗稿整理）：系统描述日常生活世界的构成与层次。",
+                sample: "生活世界的时间、空间、社会关系与知识结构",
+                conclusion: "生活世界是主体间共有的、理所当然的现实，具有可预测的时间结构、空间与类型化的社会结构；个体在其间以「自然态度」行动，依靠知识库存与典型化维持连贯的意义。该书把舒茨的现象学社会学发展为系统的理论。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 25,
+        name: "Harold Garfinkel",
+        nameEn: "哈罗德·加芬克尔",
+        school: "Ethnomethodology",
+        birth: 1917, death: 2011,
+        nationality: "United States",
+        activeStart: 1950, activeEnd: 2011,
+        bio: "美国社会学家，常人方法学（ethnomethodology）的创始人。他师从帕森斯与舒茨，主张社会秩序并非「外部强加的规则」，而是成员在日常实践中不断「做」（accomplish）出来的。其《常人方法学研究》（1967）通过「破坏性实验」（breaching experiments）揭示被当作理所当然的社会规则，并强调表达与实践的「索引性」（indexicality），开创了与主流实证社会学迥异的微观研究路径，也启发了会话分析（萨克斯）。",
+        works: [
+            "Studies in Ethnomethodology (《常人方法学研究》, 1967)",
+            "Ethnomethodological Studies of Work (《工作之常人方法学研究》, 1986)",
+            "Harold Garfinkel: Parsons Primer (2006, 遗著整理)"
+        ],
+        research: [
+            {
+                title: "Ethnomethodology (常人方法学)",
+                year: "1967",
+                method: "微观实践分析：研究社会成员如何「做」出并维持社会秩序。",
+                sample: "日常谈话、户籍工作、临床记录等成员的实践",
+                conclusion: "社会秩序不是被成员遵从的既定规则，而是成员在具体情境中通过日常实践「完成」的成就（accomplishment）。常人方法学主张研究成员使社会「可说明」（accountable）的实践——他们如何陈述、分类、修补秩序，从而揭示社会秩序的实践基础。",
+                verified: true
+            },
+            {
+                title: "Breaching Experiments (破坏性实验)",
+                year: "1960s",
+                method: "实验式干预：故意违反日常互动中被视为理所当然的规则，观察成员的反应。",
+                sample: "例如在正常交易中讨价还价、把他人客气话当真、刻意不遵循常规礼貌等情境",
+                conclusion: "当常识规则被违反时，成员会感到困惑、恼怒并努力「修复」秩序（normalization），这恰恰证明这些规则虽未被言明，却构成互动赖以运转的隐性结构。破坏性实验因此「照亮」了日常秩序的隐性基础——秩序存在于成员的实践预期之中。",
+                verified: true
+            },
+            {
+                title: "Indexicality and Accountability (索引性表达与可说明性)",
+                year: "1967",
+                method: "对话与文本分析：考察话语与行为的意义如何依赖具体情境。",
+                sample: "日常话语、档案记录、法庭陈述中的情境依赖表达",
+                conclusion: "表达与行动具有「索引性」（indexicality）：其意义高度依赖使用的情境、说话者与上下文，无法脱离情境而完全确定。成员通过「可说明性」（accountability）——使自己的实践可以被他人理解与解释——来弥合这种模糊，从而维持社会秩序的可预期性。",
+                verified: true
+            },
+            {
+                title: "Ethnomethodological Studies of Work (工作的常人方法学研究)",
+                year: "1986",
+                method: "民族志与文本分析：研究专业与科学工作中的实践细节。",
+                sample: "科学实验室、警察记录、数学证明、天文学研究等专业实践",
+                conclusion: "即便在最「客观」的科学与专业工作中，秩序也由成员的地方性实践（如分类、转录、校准、协商）持续建构。常人方法学通过「独特适切性」研究这些实践如何生产出被当作客观成果的知识，挑战了知识客观性的朴素理解。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 26,
+        name: "Harvey Sacks",
+        nameEn: "哈维·萨克斯",
+        school: "Ethnomethodology",
+        birth: 1935, death: 1975,
+        nationality: "United States",
+        activeStart: 1960, activeEnd: 1975,
+        bio: "美国社会学家，加芬克尔的学生，会话分析（conversation analysis）的奠基人。他最早把录音转写引入社会学研究，系统考察日常谈话的组织结构，提出「话轮转换」（turn-taking）与「相邻对」（adjacency pairs）等经典概念，证明看似随意的日常会话实为高度有序的社会产物。其遗著讲稿《会话讲稿》成为会话分析运动的纲领性文献。",
+        works: [
+            "Lectures on Conversation (《会话讲稿》, 1992, 遗著, 两卷)",
+            "Harvey Sacks: Lectures 1964–1965 (1989, 遗著整理)",
+            "Studies in Social Interaction (《社会互动研究》, 1972, 主编)"
+        ],
+        research: [
+            {
+                title: "Conversation Analysis and the Organization of Talk (会话分析与谈话的组织)",
+                year: "1960s–1975",
+                method: "录音转写的微观分析：对真实电话与面对面对话的逐句逐秒转录分析。",
+                sample: "日常电话对话、诊室互动、组织内谈话等自然发生的会话（录音资料）",
+                conclusion: "日常会话具有严格而有序的组织结构：参与者依「话轮转换系统」（turn-taking）轮流说话，通过「相邻对」（adjacency pairs，如问候—回应、提问—回答）组织行动的序列。会话中的重叠、停顿、修正等看似随机的现象，实为参与者精密的秩序化实践。",
+                verified: true
+            },
+            {
+                title: "Membership Categorization Analysis (成员分类分析)",
+                year: "1960s–1975",
+                method: "文本与对话分析：研究成员如何运用社会类别（如母亲、青少年、专业人士）组织经验。",
+                sample: "日常讲述、玩笑、新闻报道中的社会类别运用",
+                conclusion: "成员运用「成员分类装置」（membership categorization device）——如亲属、年龄、职业等类别——来解释与组织世界；类别的选择与关联（如「母亲」连带「照护」）是情境性的、有秩序的活动。这一分析揭示了类别化在意义生产中的作用。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 27,
+        name: "George C. Homans",
+        nameEn: "乔治·霍曼斯",
+        school: "Exchange Theory",
+        birth: 1910, death: 1989,
+        nationality: "United States",
+        activeStart: 1940, activeEnd: 1989,
+        bio: "美国社会学家，交换理论（exchange theory）的开创者之一。他早年研究小群体（《人类群体》,1950），后转向行为主义取向的交换理论，在《社会行为：其基本形式》（1961）中提出解释社会行为的六条命题（成功、刺激、价值、剥夺—满足、攻击—赞同、理性），主张把社会行为理解为个体间的奖惩交换。这一取向为理性选择理论奠定了基础。",
+        works: [
+            "The Human Group (《人类群体》, 1950)",
+            "Social Behavior: Its Elementary Forms (《社会行为：其基本形式》, 1961)",
+            "Sentiments and Activities (1962)",
+            "Coming to My Senses: The Autobiography of a Sociologist (《清醒：一位社会学家自传》, 1984)"
+        ],
+        research: [
+            {
+                title: "The Human Group (人类群体)",
+                year: "1950",
+                method: "案例再分析：对既有小群体研究（如银行接线员、街角帮、社会人类学田野案例）进行系统再分析。",
+                sample: "西方电气公司银行接线室、街角帮、纽伯里波特等小群体案例",
+                conclusion: "小群体是社会的基础单位，其运行遵循可识别的人际行为规律：互动、情感与活动相互关联，群体通过互惠、地位分化与规范维持整合。霍曼斯借此提出研究社会行为应从微观小群体入手。",
+                verified: true
+            },
+            {
+                title: "The Six Propositions of Social Behavior (社会行为的六条命题)",
+                year: "1961",
+                method: "行为主义与经济学类比：以操作性条件反射与边际效用解释社会行为。",
+                sample: "日常互动中的报酬、惩罚与行为选择",
+                conclusion: "霍曼斯提出解释社会行为的六条命题：成功命题（行为越常获酬越可能重复）、刺激命题（相似刺激引发相似反应）、价值命题（行为结果价值越高越易发生）、剥夺—满足命题（报酬已饱和则价值下降）、攻击—赞同命题（受挫致攻击、受奖致赞同）、理性命题（行动者选择预期价值最大化的行动）。社会互动因此被理解为理性的奖惩交换。",
+                verified: true
+            },
+            {
+                title: "Exchange, Justice and Distributive Justice (交换、公平与分配正义)",
+                year: "1961–1974",
+                method: "理论建构：把交换与公平感纳入行为解释。",
+                sample: "互动中的报酬分配与个体公平感知",
+                conclusion: "人们在交换中不仅追求报酬，还依「分配正义」判断交换是否公平——比较投入与报酬的比例。当交换被认为不公平时，会引发不满与行为调整（攻击或降低投入），公平感因此是社会交换秩序的重要调节机制。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 28,
+        name: "Peter M. Blau",
+        nameEn: "彼得·布劳",
+        school: "Exchange Theory",
+        birth: 1918, death: 2002,
+        nationality: "United States (born in Austria)",
+        activeStart: 1950, activeEnd: 2002,
+        bio: "奥地利裔美国社会学家，交换理论的代表，也是宏观结构社会学的推动者。其《社会生活中的交换与权力》（1964）从微观交换推导出宏观社会结构与权力分化；《美国职业结构》（1967，与邓肯合著）成为地位获得研究的经典；《不平等与异质性》（1977）则以群体参数（规模、异质性、不平等）分析宏观社会结构。",
+        works: [
+            "The Dynamics of Bureaucracy (《科层制的动力》, 1955)",
+            "Exchange and Power in Social Life (《社会生活中的交换与权力》, 1964)",
+            "The American Occupational Structure (《美国职业结构》, 1967, 与邓肯合著)",
+            "Inequality and Heterogeneity: A Primitive Theory of Social Structure (《不平等与异质性》, 1977)",
+            "Structural Contexts of Opportunities (1994)"
+        ],
+        research: [
+            {
+                title: "Exchange and Power in Social Life (社会生活中的交换与权力)",
+                year: "1964",
+                method: "理论建构：从微观交换过程推导宏观权力与结构分化。",
+                sample: "组织内与群体间的交换关系、权力与地位差异",
+                conclusion: "社会交换基于互惠：当交换资源不对等、一方难以回报时，便产生权力（另一方可以支配）。权力的不对称积累导致地位分层与整合机制；宏观社会结构由此从无数微观交换中涌现。布劳以此把交换理论从心理学扩展为社会结构理论。",
+                verified: true
+            },
+            {
+                title: "The American Occupational Structure (美国职业结构)",
+                year: "1967",
+                method: "大规模社会调查与统计建模：用路径分析估计社会流动与地位获得。",
+                sample: "美国男性全国代表性样本的职业流动与教育、父亲职业数据",
+                conclusion: "地位获得主要受教育与个人职业的影响，父辈地位的影响部分通过教育传递；教育是代际流动的关键中介。该「地位获得模型」（与邓肯合作）开创了流动研究的新范式，成为社会分层研究的经典。",
+                verified: true
+            },
+            {
+                title: "Inequality and Heterogeneity: Structural Parameters (不平等与异质性：社会结构的参数)",
+                year: "1977",
+                method: "宏观结构理论：以群体参数分析社会结构对社会交往的影响。",
+                sample: "群体规模、异质性（类别差异）与不平等（等级差异）参数",
+                conclusion: "社会交往受结构参数制约：群体的规模、异质性（成员按不同类别分布）与不平等（按等级分布）决定不同群体成员接触的概率。异质性越高、越分散，跨类别交往越多，从而影响整合、冲突与流动。布劳由此建立宏观结构社会学的形式化基础。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 29,
+        name: "James S. Coleman",
+        nameEn: "詹姆斯·科尔曼",
+        school: "Rational Choice Theory",
+        birth: 1926, death: 1995,
+        nationality: "United States",
+        activeStart: 1955, activeEnd: 1995,
+        bio: "美国社会学家，理性选择理论（rational choice theory）与社会资本研究的集大成者，也是大规模教育实证研究的开拓者。其《社会理论的基础》（1990）以「方法论个体主义 + 宏观—微观—宏观转换」重建社会理论，主张从个体理性行动出发解释宏观社会现象；1966年发表的《教育机会均等》报告（科尔曼报告）震动美国教育政策；他系统阐释了「社会资本」（social capital）概念。",
+        works: [
+            "Introduction to Mathematical Sociology (《数理社会学导论》, 1964)",
+            "Equality of Educational Opportunity (《教育机会均等》, 1966, 即科尔曼报告)",
+            "The Mathematics of Collective Action (《集体行动的数理分析》, 1973)",
+            "Foundations of Social Theory (《社会理论的基础》, 1990)"
+        ],
+        research: [
+            {
+                title: "The Coleman Report on Educational Opportunity (科尔曼报告：教育机会均等)",
+                year: "1966",
+                method: "大规模全国调查与统计分析：对约60万名美国学生及其学校进行问卷与成绩数据收集，测量学校资源、家庭背景与学业成就的关系。",
+                sample: "美国约4000所学校、约60万名学生（覆盖不同种族与社会阶层）",
+                conclusion: "报告发现学生学业成就的差异主要源于家庭与同伴背景，而非学校资源投入的差异；少数族裔学生成绩受同伴构成影响显著。该结论挑战了「增加学校经费即可缩小差距」的假设，深刻影响美国「校车运动」与教育政策争论，也奠定了教育机会的实证研究传统。",
+                verified: true
+            },
+            {
+                title: "Social Capital Theory (社会资本理论)",
+                year: "1980s–1990",
+                method: "理论建构与经验应用：在理性选择框架内分析社会结构资源的运用。",
+                sample: "家庭、社区、学校与社会网络中的关系资源",
+                conclusion: "社会资本是存在于社会关系与网络结构之中的资源：个体凭借其网络位置、信任与义务关系获取信息、支持与集体行动的能力。社会资本与人力资本互补，影响教育成就、家庭支持与社区治理，也构成从个体行动到集体结果的中介。",
+                verified: true
+            },
+            {
+                title: "Foundations of Social Theory: Micro-to-Macro (社会理论的基础：宏观—微观—宏观)",
+                year: "1990",
+                method: "方法论个体主义与形式化建模：建立从个体理性行动到宏观社会现象的转换逻辑。",
+                sample: "集体行动、规范涌现、权威结构、信任与网络等宏观现象",
+                conclusion: "社会理论应以个体的理性行动为起点：个体在结构与约束下追求自身利益，其行动经由相互作用「涌现」出宏观社会现象（规范、组织、市场、权力）。科尔曼由此主张社会学既要解释行动，也要解释社会系统的宏观后果，为理性选择社会学奠定了系统基础。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 30,
+        name: "Gary S. Becker",
+        nameEn: "加里·贝克尔",
+        school: "Rational Choice Theory",
+        birth: 1930, death: 2014,
+        nationality: "United States",
+        activeStart: 1955, activeEnd: 2014,
+        bio: "美国经济学家，1992年诺贝尔经济学奖得主，被称为「经济学帝国主义」的代表。他把理性选择与成本—收益分析系统扩展到传统上属于社会学的领域——婚姻与家庭、生育、犯罪、歧视、教育（人力资本），主张人类行为普遍遵循理性最大化逻辑。其《人类行为的经济分析》（1976）与《家庭论》（1981）深刻影响了经济社会学、家庭社会学与犯罪社会学。",
+        works: [
+            "The Economics of Discrimination (《歧视经济学》, 1957)",
+            "Human Capital (《人力资本》, 1964)",
+            "The Economic Approach to Human Behavior (《人类行为的经济分析》, 1976)",
+            "A Treatise on the Family (《家庭论》, 1981)",
+            "The Economic Approach to Crime (《犯罪的经济分析》, 1968, 论文)",
+            "Accounting for Tastes (《解释偏好》, 1996)"
+        ],
+        research: [
+            {
+                title: "Human Capital Theory (人力资本理论)",
+                year: "1964",
+                method: "经济理论与实证分析：把教育、培训视为可投资并产生回报的资本。",
+                sample: "教育与职业培训的投资回报、收入分配数据",
+                conclusion: "教育、培训与健康可被视为「人力资本」投资：个体理性地权衡其成本与未来收益（更高的收入、更好的机会）。人力资本积累解释收入差异、职业流动与经济增长，成为劳动经济学与教育经济学的基础理论。",
+                verified: true
+            },
+            {
+                title: "A Treatise on the Family (家庭论：家庭经济学)",
+                year: "1981",
+                method: "理性选择与时间分配模型：把家庭作为理性生产与配置资源的单位。",
+                sample: "婚姻匹配、生育决策、家务分工、家庭内部分配",
+                conclusion: "家庭可被理解为一种生产与交换单位：个体依据比较优势与收益最大化安排婚配、生育与家务分工；婚姻类似于契约、离婚源于净收益变化。贝克尔以此把家庭行为纳入理性分析，引发大量讨论与后续研究。",
+                verified: true
+            },
+            {
+                title: "The Economic Approach to Crime (犯罪的经济分析)",
+                year: "1968",
+                method: "成本—收益模型：把犯罪者视为理性比较犯罪收益与预期惩罚的行动者。",
+                sample: "犯罪决策中的预期收益、被抓获概率与惩罚力度",
+                conclusion: "潜在罪犯是理性的：其是否犯罪取决于犯罪收益与预期成本（被抓获概率×惩罚严重度）的比较。据此，惩罚的确定性与严厉程度（而非仅道德教化）能够影响犯罪率，这一框架开创了犯罪经济学的先河并影响刑事政策。",
+                verified: true
+            },
+            {
+                title: "The Economics of Discrimination (歧视经济学)",
+                year: "1957",
+                method: "理论建模与市场分析：把歧视视为雇主、雇员或消费者的「偏好」进入市场分析。",
+                sample: "劳动力市场中基于种族、性别等的工资与雇佣差异",
+                conclusion: "歧视可被建模为市场主体的「歧视偏好」（taste for discrimination）：歧视者宁愿放弃部分利润/效用也不愿与特定群体交易。竞争市场理论上会削弱歧视性雇主的竞争力，但结构因素（如隔离、信息）可能延续歧视，由此为歧视的经济后果提供分析框架。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 31,
+        name: "Claude Lévi-Strauss",
+        nameEn: "克洛德·列维-斯特劳斯",
+        school: "Structuralism / Post-structuralism",
+        birth: 1908, death: 2009,
+        nationality: "France",
+        activeStart: 1945, activeEnd: 2009,
+        bio: "法国人类学家与结构主义者，结构主义（structuralism）运动的创始人。他把语言学（索绪尔）的结构方法引入人类学，主张社会文化现象（亲属、神话、分类）由深层的二元对立结构所组织。其《亲属的基本结构》（1949）以「女人的交换」解释婚姻规则；四卷本《神话学》（1964–1971）系统分析美洲神话的深层结构；《野性的思维》（1962）对比「野性」与「驯化」的思维。其思想深刻影响社会学、哲学与文化研究。",
+        works: [
+            "The Elementary Structures of Kinship (《亲属的基本结构》, 1949)",
+            "Tristes Tropiques (《忧郁的热带》, 1955)",
+            "Structural Anthropology (《结构人类学》, 1958/1973)",
+            "The Savage Mind (《野性的思维》, 1962)",
+            "Mythologiques I–IV (《神话学》四卷, 1964–1971)",
+            "The Raw and the Cooked (《生食与熟食》, 1964)"
+        ],
+        research: [
+            {
+                title: "The Elementary Structures of Kinship (亲属的基本结构)",
+                year: "1949",
+                method: "结构分析与跨文化比较：考察亲属制度与婚姻规则的深层结构。",
+                sample: "亚马逊、大洋洲等地众多「初级亲属结构」社会（婚姻交换资料）",
+                conclusion: "亲属制度基于婚姻规则与「女人的交换」：乱伦禁忌迫使群体向外通婚，形成系统的联盟与交换网络（直接交换、延迟交换、一般交换等）。亲属结构由此被视为符号与社会组织的基础，其深层逻辑由可比较的交换模式所支配。",
+                verified: true
+            },
+            {
+                title: "Structuralism and Myth Analysis (结构主义神话分析)",
+                year: "1964–1971",
+                method: "神话的比较结构分析：拆解神话为可比较的单元（mythemes），寻找二元对立逻辑。",
+                sample: "美洲印第安人各部落的大量神话文本（《神话学》四卷）",
+                conclusion: "神话是分类的思维工具，通过二元对立（生/熟、自然/文化、人/神）组织经验并调解矛盾。神话的「意义」不在于单个故事，而在于其深层结构关系；不同神话是同一结构的变体。这一分析确立了结构人类学的范式。",
+                verified: true
+            },
+            {
+                title: "The Savage Mind and Bricolage (野性的思维与拼装)",
+                year: "1962",
+                method: "认识论比较：分析「野性」（未驯化的具体）思维与科学（抽象）思维。",
+                sample: "部落社会的分类系统、图腾制度与日常知识",
+                conclusion: "「野性的思维」并非原始的「前逻辑」思维，而是另一种同样严密的分类逻辑：它以「拼装」（bricolage）方式利用手边有限的符号处理具体经验，与科学抽象思维并行不悖。图腾制度被解释为借自然类别思考社会类别的符号系统。",
+                verified: true
+            },
+            {
+                title: "Structural Anthropology and Deep Structures (结构人类学与深层结构)",
+                year: "1958/1973",
+                method: "方法论宣言：倡导从显性现象寻找深层结构。",
+                sample: "亲属、神话、艺术、烹饪等文化现象的结构分析",
+                conclusion: "社会文化的表层多样性之下存在稳定的深层结构，研究应聚焦这些结构关系而非个别内容；结构是关系的系统，其转换遵循可分析的规则。这一方法把人文学科引向「结构解释」，深刻影响了20世纪后半叶的学术范式。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 32,
+        name: "Michel Foucault",
+        nameEn: "米歇尔·福柯",
+        school: "Structuralism / Post-structuralism",
+        birth: 1926, death: 1984,
+        nationality: "France",
+        activeStart: 1960, activeEnd: 1984,
+        bio: "法国哲学家与历史学家，后结构主义与后现代思想的核心人物。他提出「知识考古学」（archaeology of knowledge）与「谱系学」（genealogy）方法，分析话语、知识与权力的共生关系。其研究贯穿疯狂（《疯癫与文明》）、诊所（《临床医学的诞生》）、规训（《规训与惩罚》）、性（《性史》）等议题，提出「规训权力」「生命权力」「治理术」等概念，深刻重塑了社会学、文化研究与批判理论。",
+        works: [
+            "Madness and Civilization (《疯癫与文明》, 1961)",
+            "The Birth of the Clinic (《临床医学的诞生》, 1963)",
+            "The Order of Things (《词与物》, 1966)",
+            "The Archaeology of Knowledge (《知识考古学》, 1969)",
+            "Discipline and Punish (《规训与惩罚》, 1975)",
+            "The History of Sexuality, Vols. 1–3 (《性史》1–3卷, 1976–1984)"
+        ],
+        research: [
+            {
+                title: "Madness and Civilization (疯癫与文明)",
+                year: "1961",
+                method: "知识考古与历史分析：追溯「疯癫」如何被社会建构与排除。",
+                sample: "中世纪至19世纪欧洲对疯癫的处置（禁闭、愚人船、精神病院）史料",
+                conclusion: "「疯癫」并非自然的医学事实，而是理性通过排斥他者而确立自身边界的产物：社会以禁闭、监管与病理化把疯癫从公共生活中排除。福柯借此展示「知识」与「排除」的共生，为后来的权力—知识分析奠定基础。",
+                verified: true
+            },
+            {
+                title: "Discipline and Punish: Disciplinary Power (规训与惩罚：规训权力)",
+                year: "1975",
+                method: "谱系学分析：考察惩罚体制从公开酷刑到监狱规训的转变。",
+                sample: "18–19世纪监狱、军营、学校、医院、工厂的规训实践与「全景敞视」（panopticon）设计",
+                conclusion: "现代惩罚从肉体酷刑转向对身体的规训：通过监视、纪律、空间隔离与考试，权力塑造「驯服的身体」与「可算度的灵魂」。全景敞视监狱象征一种持续可见、无需在场者的监视逻辑，代表现代「规训社会」的权力技术，其影响远超监狱、渗入学校、工厂与医院。",
+                verified: true
+            },
+            {
+                title: "The Archaeology of Knowledge and Discourse (知识考古学与话语)",
+                year: "1969",
+                method: "方法论建构：分析话语的构成规则（discursive formations）。",
+                sample: "医学、精神病学、语言学等话语体系的陈述规则",
+                conclusion: "知识以「话语」（discourse）形式存在，话语有其自身的陈述规则、对象与位置，构成「知识型」（episteme）。考古学分析话语如何使某些陈述成为可能、使某些对象被言说，从而把「真理」理解为特定历史话语的产物。",
+                verified: true
+            },
+            {
+                title: "Biopower and Biopolitics (生命权力与生命政治)",
+                year: "1976–1984",
+                method: "谱系学分析：考察权力从惩罚身体转向管理「生命」的转变。",
+                sample: "人口统计学、公共卫生、优生与人口治理",
+                conclusion: "现代权力从「使人死」的君主权力转向「使人活」的生命权力（biopower）：通过人口统计、健康、生殖与生命过程的规范管理来调控「人口生命」。生命政治（biopolitics）把个体与人口当作治理对象，与规训权力共同构成现代治理技术。",
+                verified: true
+            },
+            {
+                title: "The History of Sexuality and Power-Knowledge (性史与权力—知识)",
+                year: "1976–1984",
+                method: "谱系学分析：质疑「性压抑」假说，考察性话语的生产。",
+                sample: "19–20世纪关于性的科学、忏悔与规范话语",
+                conclusion: "现代社会并非压抑性话语，而是疯狂地生产关于性的话语：「权力—知识」通过医学、精神病学与忏悔生产「性」作为知识的对象。福柯由此提出著名的「权力—知识」概念——权力生产知识、知识支撑权力，二者不可分割。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 33,
+        name: "Pierre Bourdieu",
+        nameEn: "皮埃尔·布迪厄",
+        school: "Practice Theory",
+        birth: 1930, death: 2002,
+        nationality: "France",
+        activeStart: 1960, activeEnd: 2002,
+        bio: "法国社会学家，20世纪后半叶最具影响力的社会理论家之一，实践理论（theory of practice）的创立者。他提出「惯习」（habitus）、「场域」（field）、「资本」（capital，含文化资本、社会资本、符号资本）等核心概念，以「区隔」（distinction）研究文化趣味与阶级再生产，以「符号暴力」（symbolic violence）解释支配的合法化。其研究贯通教育、文化、经济与政治，试图超越结构与行动、主观与客观的二元对立。",
+        works: [
+            "Reproduction in Education, Society and Culture (《教育、社会与文化中的再生产》, 1970)",
+            "Outline of a Theory of Practice (《实践理论大纲》, 1972)",
+            "Distinction: A Social Critique of the Judgement of Taste (《区隔：趣味判断的社会批判》, 1979)",
+            "The Logic of Practice (《实践的逻辑》, 1980)",
+            "Homo Academicus (《学术人》, 1984)",
+            "Language and Symbolic Power (《语言与符号权力》, 1991)",
+            "The Weight of the World (《世界的苦难》, 1993)",
+            "Masculine Domination (《男性统治》, 1998)"
+        ],
+        research: [
+            {
+                title: "Habitus and Practice (惯习与实践)",
+                year: "1972/1980",
+                method: "理论建构：以实践理论综合结构与行动，考察内化的身体化倾向。",
+                sample: "群体成员的感知、评判与行动倾向（概念性分析）",
+                conclusion: "惯习（habitus）是经由社会化内化的、持久的性情系统——它使个体以「无需计算」的实践感行动，却又再生产既有的结构。惯习是「结构的结构化结构」：它由客观条件生成，又生成实践与感知，从而弥合结构与行动、客观与主观的对立。",
+                verified: true
+            },
+            {
+                title: "Distinction: Cultural Capital and the Reproduction of Class (区隔：文化资本与阶级再生产)",
+                year: "1979",
+                method: "大规模问卷调查与统计分析：测量法国不同社会阶层的文化趣味与消费偏好及其与地位的关系。",
+                sample: "1960–1970年代法国社会各阶层的问卷与访谈数据（含审美偏好、消费、职业等）",
+                conclusion: "文化趣味并非天然，而是阶级区隔的再生产机制：上层阶级凭借「文化资本」（品味、教育、审美）把自己区隔于下层，并把这种差异自然化为「品位」。文化资本的占有与传承维系社会不平等，故「趣味进行分类，也在分类分类者」。",
+                verified: true
+            },
+            {
+                title: "Cultural and Social Reproduction through Education (教育中的文化再生产)",
+                year: "1970",
+                method: "理论—经验分析：考察学校教育如何传递并合法化文化资本。",
+                sample: "法国教育制度中的课程、考核与语言要求",
+                conclusion: "教育制度看似中立，实则传递与回报主导阶级的文化资本：中上层子女因其家庭习得的语言与「惯习」而更容易成功，学校通过「符号暴力」把这种阶级优势合法化为「能力」差异。教育由此再生产社会不平等，而非促进平等。",
+                verified: true
+            },
+            {
+                title: "Field Theory and Symbolic Capital (场域理论与符号资本)",
+                year: "1980s",
+                method: "结构—冲突分析：把社会划分为相对自主的斗争场域。",
+                sample: "学术场域、文学场域、经济场域、政治场域等",
+                conclusion: "社会由多个相对自主的「场域」（field）构成，每个场域有其独特的资本与斗争逻辑；行动者依其资本总量与结构在场域内争夺位置与支配权。「符号资本」（symbolic capital）是被承认的资本形态，它使支配关系以「正当性」的形式被认可，从而掩盖权力的任意性。",
+                verified: true
+            },
+            {
+                title: "Symbolic Violence and Masculine Domination (符号暴力与男性统治)",
+                year: "1991–1998",
+                method: "理论分析与案例研究：考察支配如何通过日常分类被自愿地接受。",
+                sample: "性别分类、语言与象征实践中的支配关系",
+                conclusion: "「符号暴力」是通过符号、分类与语言施加的支配——被支配者在不自知中接受了支配结构并视其为自然（如性别分工）。《男性统治》把男性支配分析为一种「被符号化的、深嵌于惯习的」支配，其再生产依赖身体化与制度化的象征秩序。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 34,
+        name: "Dorothy E. Smith",
+        nameEn: "多萝西·史密斯",
+        school: "Feminist Sociology",
+        birth: 1926, death: null,
+        nationality: "Canada",
+        activeStart: 1970, activeEnd: 2026,
+        bio: "加拿大女性主义社会学家，女性主义立场理论（standpoint theory）与「制度性民族志」（institutional ethnography）的创始人。她主张主流社会学以男性中心的概念框架忽略女性的日常经验，提出从女性生活经验出发建构知识；其《日常世界作为问题》（1987）确立了以文本中介分析社会组织与权力的方法，对女性主义认识论与社会学方法论影响深远。",
+        works: [
+            "The Everyday World as Problematic: A Feminist Sociology (《日常世界作为问题：女性主义社会学》, 1987)",
+            "The Conceptual Practices of Power: A Feminist Sociology of Knowledge (《权力的概念实践》, 1990)",
+            "Writing the Social: Critique, Theory, and Investigations (《书写社会》, 1999)",
+            "Institutional Ethnography: A Sociology for People (《制度性民族志：为人的社会学》, 2005)",
+            "The Everyday World as Problematic: A Sociology for People (2006)"
+        ],
+        research: [
+            {
+                title: "Standpoint Theory and Feminist Epistemology (立场理论与女性主义认识论)",
+                year: "1970s–1987",
+                method: "认识论批判与立场分析：从女性受支配的日常经验出发，批判主流男性中心的社会学知识。",
+                sample: "女性在家务、照护与职场中的日常经验与「概念的实践」",
+                conclusion: "主流社会学把男性的立场伪装成普遍的客观知识，遮蔽了女性的经验与贡献。女性主义立场理论主张：知识生产应从被支配群体的生活经验出发，因为这种立场更可能揭示被主流概念掩盖的支配关系与真实社会过程，从而产生更充分的社会知识。",
+                verified: true
+            },
+            {
+                title: "Institutional Ethnography (制度性民族志)",
+                year: "1987–2005",
+                method: "民族志方法：从具体个体的日常经验出发，追溯其被文本中介的制度与权力所组织的过程。",
+                sample: "医疗、福利、教育、职场中女性/服务对象的日常经验及其相关制度文本（表格、档案、规章）",
+                conclusion: "社会权力通过「文本中介」（text-mediated）的协调来组织：制度用标准化的文本（表单、记录、规章）把个体的本地经验纳入制度化的行动流程。制度性民族志以「为人的社会学」追踪这些文本如何组织日常生活，从而揭示制度权力的运作而不抹杀个体经验。",
+                verified: true
+            },
+            {
+                title: "The Conceptual Practices of Power (权力的概念实践)",
+                year: "1990",
+                method: "语言与概念批判：分析概念与话语如何再生产支配。",
+                sample: "社会学与管理中的抽象概念、分类与术语实践",
+                conclusion: "概念并非中性工具：概念实践（conceptual practices）在生产知识的同时也生产支配——抽象概念把具体经验重新描述并纳入制度逻辑，使某些经验不可见。史密斯由此把知识社会学与女性主义结合，呼吁批判「概念帝国主义」。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 35,
+        name: "Raewyn Connell",
+        nameEn: "瑞文·康奈尔",
+        school: "Feminist Sociology",
+        birth: 1944, death: null,
+        nationality: "Australia",
+        activeStart: 1970, activeEnd: 2026,
+        bio: "澳大利亚社会学家，性别研究与性别秩序理论的重要学者。她在《性别与权力》（1987）中提出性别秩序的三种结构（劳动、权力、情感关系）；在《男性气质》（1995）中系统提出「霸权男性气质」（hegemonic masculinity）概念，分析多种男性气质及其等级关系；《南方理论》（2007）则批判西方中心的知识生产，倡导全球南方视角的社会理论。",
+        works: [
+            "Gender and Power (《性别与权力》, 1987)",
+            "Masculinities (《男性气质》, 1995)",
+            "Making the Difference (《制造差异》, 1982)",
+            "Gender (《性别》, 2002)",
+            "Southern Theory: The Global Dynamics of Knowledge in Social Science (《南方理论》, 2007)",
+            "The Men and the Boys (《男性与男孩》, 2000)"
+        ],
+        research: [
+            {
+                title: "Gender Order and Its Structures (性别秩序及其结构)",
+                year: "1987",
+                method: "理论建构与经验分析：把性别作为社会结构而非个体属性加以分析。",
+                sample: "劳动分工、政治权力与情感关系中的性别安排（概念性框架）",
+                conclusion: "性别（gender）是组织整个社会秩序的结构性维度，包含三个相互关联的结构：劳动（性别分工）、权力（政治与权威的性别分配）、情感关系（性、亲密与照护的组织）。性别秩序在不同历史与社会中变化，性别关系是权力与变迁的场域。",
+                verified: true
+            },
+            {
+                title: "Hegemonic Masculinity and Multiple Masculinities (霸权男性气质与多元男性气质)",
+                year: "1995",
+                method: "经验研究（访谈与群体研究）与理论建构：分析男性气质的社会建构及其等级。",
+                sample: "澳大利亚多群体男性的生活史与群体实践（性别关系分析）",
+                conclusion: "男性气质并非单一，而是多元的且按等级排列：存在「霸权男性气质」（hegemonic masculinity）——被社会理想化并主导性的男性气质模式，同时存在从属性、共谋性与边缘性男性气质。霸权男性气质通过文化理想与日常实践维持性别等级，但也随历史变迁。",
+                verified: true
+            },
+            {
+                title: "Southern Theory (南方理论)",
+                year: "2007",
+                method: "知识社会学批判：考察全球南方的社会思想如何被边缘化。",
+                sample: "拉丁美洲、非洲、亚洲等「南方」社会思想（依安蒂、弗朗茨·法农等）",
+                conclusion: "主流社会科学的知识生产以北方（欧洲北美）为中心，把南方的经验与思想降格为「数据」或「个案」。康奈尔主张应以「南方理论」重构社会学——承认全球南方的社会思想是理论而非对象，从而克服知识生产的殖民性，建立更具全球性的社会学。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 36,
+        name: "Arlie Russell Hochschild",
+        nameEn: "阿莉·拉塞尔·霍克希尔德",
+        school: "Feminist Sociology",
+        birth: 1940, death: null,
+        nationality: "United States",
+        activeStart: 1970, activeEnd: 2026,
+        bio: "美国社会学家，情感社会学与女性主义劳动研究的代表。其《被管理的心》（1983）提出「情感劳动」（emotional labor）概念，分析服务行业员工如何被要求管理自身情感；《第二班》（1989）揭示双职工家庭中女性仍承担大部分家务的「第二班」现象；《在他们自己的土地上》（2016）则以民族志深入美国右翼选民的情感世界，关注「情感阶级」与政治极化。",
+        works: [
+            "The Managed Heart: Commercialization of Human Feeling (《被管理的心：人类情感的商品化》, 1983)",
+            "The Second Shift: Working Families and the Revolution at Home (《第二班：职业家庭与家庭革命》, 1989)",
+            "The Time Bind: When Work Becomes Home and Home Becomes Work (《时间束缚》, 1997)",
+            "The Outsourced Self (《外包的自我》, 2012)",
+            "Strangers in Their Own Land: Anger and Mourning on the American Right (《在他们自己的土地上》, 2016)"
+        ],
+        research: [
+            {
+                title: "Emotional Labor (情感劳动)",
+                year: "1983",
+                method: "参与观察与深度访谈：研究服务行业员工如何管理自身情感以满足职业要求。",
+                sample: "美国某航空公司的空中乘务员与收账员（训练手册、访谈与田野观察）",
+                conclusion: "服务岗位要求员工进行「情感劳动」（emotional labor）：按职业规则调节与表演情感（空乘被要求微笑友善、收账员被要求施压）。情感因此被「商品化」并纳入劳动力要求，长期的情感管理会导致「自我疏离」（inauthenticity）——员工与自身真实情感相分离。",
+                verified: true
+            },
+            {
+                title: "The Second Shift (第二班)",
+                year: "1989",
+                method: "深度访谈与家庭观察：研究双职工家庭的家务与情感分工。",
+                sample: "美国约50对双职工夫妇的家庭生活访谈与观察",
+                conclusion: "即便在外承担全职工作，女性回家后仍承担绝大部分家务与育儿，构成「第二班」（the second shift）。这种隐形的「情感劳动」与家务负担造成女性的疲劳与婚姻紧张，揭示表面「平等」的性别关系背后的不平等结构。",
+                verified: true
+            },
+            {
+                title: "Emotional Inequalities and the 'Care Deficit' (情感不平等与照护赤字)",
+                year: "1997–2012",
+                method: "访谈与案例分析：考察照护工作、情感资源与全球化分工。",
+                sample: "双职工家庭、外包照护服务与跨国照护移民",
+                conclusion: "现代家庭面临「照护赤字」（care deficit）：工作吞噬时间使家庭照护不足。情感资源在家庭、市场与全球照护链之间的流动并不平等，女性与南方移民往往承担被低估的照护劳动。情感与照护由此成为性别与全球不平等的重要维度。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 37,
+        name: "Judith Butler",
+        nameEn: "朱迪斯·巴特勒",
+        school: "Feminist Sociology",
+        birth: 1956, death: null,
+        nationality: "United States",
+        activeStart: 1990, activeEnd: 2026,
+        bio: "美国哲学家、性别理论家与后结构主义思想家，以「性别表演性」（gender performativity）理论闻名。其《性别麻烦》（1990）质疑性别作为固定本质，主张性别身份经由重复的表演、引用社会规范而建构；《身体之重》（1993）进一步讨论身体的物质性；后期转向脆弱性、暴行与伦理政治（《脆弱的生活》等）。其思想深刻影响女性主义、酷儿理论、性别社会学与文化研究。",
+        works: [
+            "Gender Trouble: Feminism and the Subversion of Identity (《性别麻烦：女性主义与身份的颠覆》, 1990)",
+            "Bodies That Matter: On the Discursive Limits of 'Sex' (《身体之重：论「性」的话语界限》, 1993)",
+            "Undoing Gender (《消解性别》, 2004)",
+            "Precarious Life: The Powers of Mourning and Violence (《脆弱的生活》, 2004)",
+            "Notes Toward a Performative Theory of Assembly (《论集会之表演理论笔记》, 2015)"
+        ],
+        research: [
+            {
+                title: "Gender Performativity (性别表演性)",
+                year: "1990",
+                method: "后结构主义与话语分析：把性别理论建立在对「内在本质」的解构之上。",
+                sample: "性别身份、异性恋规范与二元性别分类的话语建构",
+                conclusion: "性别并非先于社会而存在的内在本质，而是通过重复的表演与对规范的引用（performativity）被建构的：性别身份是「重复引用规范所生产的效应」。性别认同因此既非固定也非任意，而是受规范约束却又可被颠覆的表演性建构。",
+                verified: true
+            },
+            {
+                title: "Bodies That Matter (身体之重：性的物质性)",
+                year: "1993",
+                method: "话语—物质分析：追问「性」（sex）与身体物质性如何被话语界定。",
+                sample: "性别规范如何界定「可承认的」（intelligible）身体",
+                conclusion: "身体并非话语之外的原初物质：规范通过反复援引「性/性别」区分来生产「可承认的身体」，把某些身体（如非二元、非异性恋者）排除于规范之外。巴特勒由此强调物质性与话语的交织，深化了表演性理论的物质维度。",
+                verified: true
+            },
+            {
+                title: "Precarity, Vulnerability and Ethics (脆弱性、暴力与伦理)",
+                year: "2004",
+                method: "伦理—政治反思：考察生命被承认与否的权力结构。",
+                sample: "战争、丧亲与「可悲伤生命」（grievable life）的承认政治",
+                conclusion: "并非所有生命都被承认值得哀悼：公共框架决定哪些生命「可悲伤」、哪些被排除于可被哀悼的范围之外。巴特勒主张以「脆弱性」（precariousness）与相互依赖为伦理起点，批判造成生命不平等的暴力与框架，为批判理论注入身体与伦理维度。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 38,
+        name: "Zygmunt Bauman",
+        nameEn: "齐格蒙特·鲍曼",
+        school: "Postmodern Sociology",
+        birth: 1925, death: 2017,
+        nationality: "Poland / United Kingdom",
+        activeStart: 1970, activeEnd: 2017,
+        bio: "波兰裔英国社会学家，后现代/流动现代性理论的核心人物。其《现代性与大屠杀》（1989）论证大屠杀是现代性理性化与科层化的极端产物；《流动的现代性》（2000）以「液态」比喻当代社会的流动、不确定与个体化；其「立法者与阐释者」「废弃的人生」「全球化的人类后果」等命题深刻描绘了现代个体的脆弱与意义困境，成为后现代社会学最广泛流传的声音之一。",
+        works: [
+            "Culture as Praxis (《作为实践的文化》, 1973)",
+            "Legislators and Interpreters: On Modernity, Post-modernity and Intellectuals (《立法者与阐释者》, 1987)",
+            "Modernity and the Holocaust (《现代性与大屠杀》, 1989)",
+            "Globalization: The Human Consequences (《全球化：人类的后果》, 1998)",
+            "Liquid Modernity (《流动的现代性》, 2000)",
+            "Liquid Love: On the Frailty of Human Bonds (《流动之爱》, 2003)",
+            "Wasted Lives: Modernity and Its Outcasts (《废弃的人生：现代性及其弃民》, 2004)",
+            "Retrotopia (《回退乌托邦》, 2017)"
+        ],
+        research: [
+            {
+                title: "Modernity and the Holocaust (现代性与大屠杀)",
+                year: "1989",
+                method: "历史—理论分析：把大屠杀置于现代性的科层化与理性化进程中考量。",
+                sample: "纳粹种族灭绝的科层组织、技术分工与去人格化过程",
+                conclusion: "大屠杀并非现代性的「反常越轨」，而是现代性理性化、科层化与「道德距离化」的极端产物：科层分工、技术理性与官僚程序把暴行分解为日常「工作」，使参与者无需面对道德后果。鲍曼由此批判把大屠杀当作历史偶然的解释，主张现代性本身含藏毁灭性潜能。",
+                verified: true
+            },
+            {
+                title: "Liquid Modernity (流动的现代性)",
+                year: "2000",
+                method: "社会诊断：以「固体/液体」隐喻比较现代性的两个阶段。",
+                sample: "当代社会的就业、亲密关系、消费与身份的不确定性",
+                conclusion: "现代性从「固体的」（科层、固定、长期承诺）转向「流动的」（灵活、不确定性、即时性）：一切关系、工作与身份都变得短暂易变，个体被抛入持续的自我建构却缺乏安全锚点。流动现代性的个体化带来自由与流动，也带来焦虑、孤独与「关系脆弱」。",
+                verified: true
+            },
+            {
+                title: "Legislators and Interpreters (立法者与阐释者：知识分子的角色)",
+                year: "1987",
+                method: "历史社会学分析：比较现代与后现代条件下知识分子的权威来源。",
+                sample: "知识分子从「立法者」（现代，以普遍理性立法）到「阐释者」（后现代，翻译多元话语）的转变",
+                conclusion: "现代知识分子曾以普遍理性自居、为社会立法；在后现代条件下，权威分散、理性不再有单一基础，知识分子退为「阐释者」——在多元语言游戏之间进行翻译与沟通，而不再垄断真理。这一诊断体现了后现代对元叙事的怀疑。",
+                verified: true
+            },
+            {
+                title: "Globalization and Wasted Lives (全球化的人类后果与废弃的人生)",
+                year: "1998–2004",
+                method: "宏观社会分析：考察全球化的流动与排斥的两面性。",
+                sample: "资本与精英的流动性 vs 被排除于流动之外的「废弃人口」",
+                conclusion: "全球化加剧「流动性」的不平等：资本与精英自由流动，而大量人口（难民、失业者、过时劳动者）成为「废弃的人生」被排斥于体系之外。全球化因此既创造联结也制造「废品」，现代性在流动的同时不断产出被抛弃者。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 39,
+        name: "Jean Baudrillard",
+        nameEn: "让·鲍德里亚",
+        school: "Postmodern Sociology",
+        birth: 1929, death: 2007,
+        nationality: "France",
+        activeStart: 1960, activeEnd: 2007,
+        bio: "法国社会理论家与哲学家，后现代主义与「仿真」理论的核心人物。他早期以符号学批判消费社会（《消费社会》,1970），后提出著名的「拟像」（simulacra）与「超真实」（hyperreality）概念——符号脱离指涉现实、没有原版的复制取代真实（《仿真与拟像》,1981）。其论域涵盖媒体、商品、海湾战争与大众文化，深刻影响文化研究与媒体理论。",
+        works: [
+            "The System of Objects (《物体系》, 1968)",
+            "The Consumer Society: Myths and Structures (《消费社会》, 1970)",
+            "For a Critique of the Political Economy of the Sign (《符号政治经济学批判》, 1972)",
+            "Simulacra and Simulation (《仿真与拟像》, 1981)",
+            "America (《美国》, 1986)",
+            "The Gulf War Did Not Take Place (《海湾战争不曾发生》, 1991)"
+        ],
+        research: [
+            {
+                title: "The Consumer Society and the Logic of Signs (消费社会与符号逻辑)",
+                year: "1970",
+                method: "符号学—政治经济学批判：分析消费作为符号区分的逻辑。",
+                sample: "商品、广告与消费实践中的符号意义",
+                conclusion: "消费不是对使用价值的满足，而是对「符号」的消费：物在符号系统中承担区分社会地位的功能。鲍德里亚主张应批判「符号政治经济学」——商品的意义由符号差异系统（而非使用价值）决定，消费由此再生产社会区分。",
+                verified: true
+            },
+            {
+                title: "Simulacra and Simulation / Hyperreality (拟像与超真实)",
+                year: "1981",
+                method: "符号学与媒介理论：考察符号与现实关系的历史演变。",
+                sample: "媒介图像、主题公园、迪士尼、地图与现实的仿真",
+                conclusion: "符号经历了从「反映现实」到「掩盖现实」再到「掩盖现实之缺席」直至「与任何现实无关」的拟像（simulacra）阶段：仿真物没有原版、反而成为「超真实」（hyperreality），真实与非真实的界限被抹平。在媒体饱和的世界里，模型与仿真先于并取代了现实经验。",
+                verified: true
+            },
+            {
+                title: "The Gulf War Did Not Take Place (海湾战争不曾发生)",
+                year: "1991",
+                method: "媒介批判：分析战争被媒体仿真化、符号化的事件。",
+                sample: "海湾战争的电视直播、影像与媒体叙事",
+                conclusion: "在媒介饱和的时代，战争被还原为可消费的媒体影像与符号，真实战争被「仿真」取代——公众体验的是被中介化的战争奇观而非战争本身。这一论题体现了鲍德里亚对媒体「拟像」逻辑的极致推演，也引发广泛争议。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 40,
+        name: "Jean-François Lyotard",
+        nameEn: "让-弗朗索瓦·利奥塔",
+        school: "Postmodern Sociology",
+        birth: 1924, death: 1998,
+        nationality: "France",
+        activeStart: 1960, activeEnd: 1998,
+        bio: "法国哲学家与后现代主义思想家，以《后现代状况》（1979）闻名。他提出后现代主义是对「元叙事」（grand/meta-narratives，如理性进步、解放、历史必然性）的普遍怀疑，并分析知识在后工业社会的合法化转向「绩效原则」。其《歧争》（1983）进一步探讨语言游戏间的不可通约与不公。其思想奠定了后现代状况的哲学诊断。",
+        works: [
+            "The Postmodern Condition: A Report on Knowledge (《后现代状况：关于知识的报告》, 1979)",
+            "Libidinal Economy (《力比多经济》, 1974)",
+            "The Differend: Phrases in Dispute (《歧争：纠纷中的句子》, 1983)",
+            "Heidegger and 'the jews' (《海德格尔与「犹太人」》, 1988)",
+            "The Inhuman (《非人》, 1991)"
+        ],
+        research: [
+            {
+                title: "The Postmodern Condition and the End of Grand Narratives (后现代状况与宏大叙事的终结)",
+                year: "1979",
+                method: "知识论与社会分析：考察知识在发达社会的地位与合法化方式。",
+                sample: "科学与技术知识在后工业社会的生产与合法化",
+                conclusion: "后现代状况以「对元叙事的怀疑」为特征：理性进步、解放、历史必然性等宏大叙事丧失可信度。知识的合法化不再诉诸元叙事，而转向「绩效原则」（performativity）——知识以可操作、可效率化为准。知识成为信息商品，科学也服从技术—绩效逻辑。",
+                verified: true
+            },
+            {
+                title: "The Differend (歧争)",
+                year: "1983",
+                method: "语言哲学分析：考察不同话语框架间无法裁定的争议。",
+                sample: "大屠杀幸存者证言、语言游戏的不可通约冲突",
+                conclusion: "「歧争」（differend）指争议双方分属不可通约的语言框架，以致受损害一方的经验无法在对方的话语中「被表达」，从而根本得不到承认（如幸存者无法用既有范畴证明其受损害）。利奥塔由此批判宏大话语对差异的抹平，主张承认歧争的存在与不公。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 41,
+        name: "Bruno Latour",
+        nameEn: "布鲁诺·拉图尔",
+        school: "Actor-Network Theory",
+        birth: 1947, death: 2022,
+        nationality: "France",
+        activeStart: 1975, activeEnd: 2022,
+        bio: "法国哲学家、社会学家与人类学家，行动者网络理论（Actor-Network Theory, ANT）与科学社会学（实验室研究）的核心人物。其《实验室生活》（1979，与伍尔加合著）通过参与观察揭示科学事实如何在实验室实践中被建构；《我们从未现代过》（1991）批判现代性的自然/文化二分；《重组社会》（2005）提出以「行动者网络」重新理解社会联结。他主张以「对称性」原则把人与非人行动者同等地纳入分析。",
+        works: [
+            "Laboratory Life: The Social Construction of Scientific Facts (《实验室生活》, 1979, 与伍尔加合著)",
+            "Science in Action: How to Follow Scientists and Engineers through Society (《行动中的科学》, 1987)",
+            "We Have Never Been Modern (《我们从未现代过》, 1991)",
+            "Pandora's Hope: Essays on the Reality of Science Studies (《潘多拉的希望》, 1999)",
+            "Reassembling the Social: An Introduction to Actor-Network-Theory (《重组社会》, 2005)"
+        ],
+        research: [
+            {
+                title: "Laboratory Studies and the Social Construction of Scientific Facts (实验室研究与科学事实的社会建构)",
+                year: "1979",
+                method: "参与观察民族志：在加州索尔克研究所生物实验室进行田野观察，追踪科学事实的生产过程。",
+                sample: "神经内分泌学实验室的日常实践（实验、论文写作、讨论）",
+                conclusion: "科学事实并非「被发现」而是被建构：实验室实践把实验、仪器、标记物与修辞「打包」为可发表的事实，通过删除过程痕迹而变得客观。事实的确定性来自社会过程而非纯粹自然，这一研究开创了「实验室研究」并动摇了科学客观性的朴素理解。",
+                verified: true
+            },
+            {
+                title: "Actor-Network Theory (行动者网络理论)",
+                year: "1980s–2005",
+                method: "对称性原则与网络追踪：把人、物、技术、话语作为同质「行动者」纳入网络分析。",
+                sample: "科学、技术、医学、政治与日常生活中的异质行动者网络",
+                conclusion: "社会秩序由「行动者网络」（actor-networks）构成：人与非人（物、技术、文本）通过「翻译」（translation）与「联结」共同行动、产生效应。ANT主张以「追踪联结」取代本质主义的社会结构解释，社会并非给定实体，而是不断被行动者网络「组装」（reassembling）的集合。",
+                verified: true
+            },
+            {
+                title: "We Have Never Been Modern (我们从未现代过)",
+                year: "1991",
+                method: "现代性批判：解构自然/文化、主体/客体的二分法。",
+                sample: "现代科学、技术与社会对自然与文化边界的实践",
+                conclusion: "现代性宣称严格区分自然与文化、主体与客体，但实践中始终在「杂交」——生产混合体（如温室效应、克隆）。拉图尔主张「我们从未现代过」：应放弃二分的现代性神话，以行动者网络的「混合」逻辑理解社会—自然，从而为生态与现代性问题提供新框架。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 42,
+        name: "Michel Callon",
+        nameEn: "米歇尔·卡龙",
+        school: "Actor-Network Theory",
+        birth: 1945, death: null,
+        nationality: "France",
+        activeStart: 1980, activeEnd: 2026,
+        bio: "法国社会学家与经济社会学家，行动者网络理论（ANT）的共同奠基人。他以经典案例研究（圣布里厄湾扇贝养殖、法国电动车VEL）阐发「翻译」（translation）概念，说明行动者网络如何通过「问题化、利益赋予、招募、动员」被建构；其后期「经济的经济学化」（economics at large）研究把经济学视为参与建构经济现实的力量。",
+        works: [
+            "Some Elements of a Sociology of Translation (《翻译社会学若干要素》, 1986, 论文)",
+            "The Laws of the Markets (《市场的法则》, 1998, 主编)",
+            "Acting in an Uncertain World (2001, 合著)",
+            "Markets in the Making (《正在形成的市场》, 2021)"
+        ],
+        research: [
+            {
+                title: "The Sociology of Translation (翻译的社会学)",
+                year: "1986",
+                method: "案例研究：考察行动者网络如何经由「翻译」过程被建构与稳定。",
+                sample: "法国圣布里厄湾扇贝养殖实验、法国电动车项目（VEL）的异质行动者网络",
+                conclusion: "网络建构经由四阶段「翻译」：问题化（problematization，界定共同问题与必经之点）、利益赋予（interessement，把其他行动者拉入网络）、招募（enrolment，确立角色）与动员（mobilisation，使网络可代表集体）。行动者网络因此是动态协商的产物，而非预定的结构。",
+                verified: true
+            },
+            {
+                title: "The Performativity of Economics (经济学的表演性)",
+                year: "1998",
+                method: "经济社会学分析：考察经济学知识如何参与建构经济现实。",
+                sample: "市场设计、金融工具、会计与经济学模型的经济实践",
+                conclusion: "经济学并非中立地描述既有的经济，而是「表演性」（performative）的：经济学理论、模型与工具参与并塑造着市场、金融与组织的实际运行（如期权定价模型影响交易实践）。经济因此是经济学及其工具共同建构的成果。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 43,
+        name: "John Law",
+        nameEn: "约翰·劳",
+        school: "Actor-Network Theory",
+        birth: 1946, death: null,
+        nationality: "United Kingdom",
+        activeStart: 1980, activeEnd: 2026,
+        bio: "英国社会学家，行动者网络理论（ANT）的重要成员，研究异质性网络的建构、组织的物质性与科学实践。其《组织现代性》（1994）以英国皇家海军组织为案例展示异质行动者网络的运作；《方法之后》（2004）反思主流科学方法论，主张「多重方法」与非线性知识实践。他与拉图尔、卡龙共同奠定了ANT的研究纲领。",
+        works: [
+            "Organizing Modernity (《组织现代性》, 1994)",
+            "Actor Network Theory and After (《行动者网络理论之后》, 1999, 与哈萨德合编)",
+            "Aircraft Stories: Decentering the Object in Technoscience (《飞机故事》, 2002)",
+            "After Method: Mess in Social Science Research (《方法之后：社会科学研究中的混乱》, 2004)"
+        ],
+        research: [
+            {
+                title: "Organizing Modernity / Heterogeneous Networks (组织现代性与异质性网络)",
+                year: "1994",
+                method: "案例研究：以组织与技术的异质网络分析社会秩序。",
+                sample: "英国皇家海军（RN）的组织、舰船、军事技术与人员网络",
+                conclusion: "组织是「异质性网络」（heterogeneous network）：人、机器、技术、文本与规则相互联结、协同行动才产生组织效果。组织的稳定性依赖网络元素的持续协调与「模式化」（pattern），而非单一的制度或权力中心。",
+                verified: true
+            },
+            {
+                title: "After Method (方法之后：多重方法)",
+                year: "2004",
+                method: "方法论反思：批判单一、线性、以「秩序」为取向的主流方法观。",
+                sample: "科学与社会研究中的非线性、矛盾与「混乱」现象",
+                conclusion: "社会现实常是流动、矛盾且「混乱」的，单一线性方法会把它简化或抹平。劳主张「多重方法」（multiple methods）与「方法之后」的态度——承认方法本身就是介入，采用开放性、片段式、反思性的研究策略以捕捉现实的复杂性，而非强加秩序。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 44,
+        name: "Immanuel Wallerstein",
+        nameEn: "伊曼纽尔·沃勒斯坦",
+        school: "World-Systems Theory",
+        birth: 1930, death: 2019,
+        nationality: "United States",
+        activeStart: 1960, activeEnd: 2019,
+        bio: "美国历史社会学家，世界体系理论（world-systems theory）的创始人。其四卷本《现代世界体系》（1974–2011）以历史比较分析资本主义世界经济体系的兴起，提出「核心—半边缘—边缘」的三级结构，论证全球资本主义通过不平等的中心—边缘交换实现资本积累。这一理论把「国家」置于全球体系中考察，深刻影响了历史社会学、全球研究与依赖理论。",
+        works: [
+            "The Modern World-System, Vols. 1–4 (《现代世界体系》1–4卷, 1974, 1980, 1989, 2011)",
+            "The Capitalist World-Economy (1979)",
+            "Historical Capitalism (《历史资本主义》, 1983)",
+            "World-Systems Analysis: An Introduction (《世界体系分析导论》, 2004)",
+            "Unthinking Social Science (《否思社会科学》, 1991)"
+        ],
+        research: [
+            {
+                title: "The Modern World-System (现代世界体系)",
+                year: "1974–2011",
+                method: "历史比较分析：以16世纪以来的欧洲与全球史考察资本主义世界经济的形成与扩展。",
+                sample: "15世纪末以来的世界贸易、殖民、工业化与国家间体系史料",
+                conclusion: "自16世纪起，欧洲发展出资本主义「世界体系」：由统一的全球经济分工把世界各地联结为一个体系。体系内部分化为核心（core，发达工业与资本密集）、半边缘（semi-periphery）与边缘（periphery，原料与劳动密集），核心通过不平等交换剥削边缘，形成持续的不平等与积累。",
+                verified: true
+            },
+            {
+                title: "Core-Periphery and Unequal Exchange (核心—边缘与不平等交换)",
+                year: "1974–1980",
+                method: "结构性分析：考察世界体系内部的劳动力工与价值转移。",
+                sample: "核心、半边缘、边缘国家的生产分工与贸易条件",
+                conclusion: "世界经济的利润通过等级化的生产分工分配：核心国家垄断高附加值生产，边缘国家沦为原料与低附加值生产地；贸易与投资造成价值从边缘向核心转移，使结构性不平等不断再生产。边缘的「发展」受体系结构制约，故国家发展须置于世界体系视野中理解。",
+                verified: true
+            },
+            {
+                title: "Hegemonic Cycles and the Rise and Decline of World Powers (霸权周期与世界霸权的兴衰)",
+                year: "1980s–2011",
+                method: "历史分析：考察世界体系中主导国家（霸权）的更替。",
+                sample: "荷兰、英国、美国相继主导世界体系的霸权周期",
+                conclusion: "世界体系的历史由霸权周期组成：荷兰、英国、美国先后凭借经济、军事与意识形态优势取得体系霸权，随后在竞争与过度扩张中衰落。霸权更替并非循环重复，而是体系结构性危机的表现，沃勒斯坦并预测体系的长期危机与可能的转型。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 45,
+        name: "Anthony Giddens",
+        nameEn: "安东尼·吉登斯",
+        school: "Structuration Theory",
+        birth: 1938, death: null,
+        nationality: "United Kingdom",
+        activeStart: 1970, activeEnd: 2026,
+        bio: "英国社会学家，当代最具影响力的社会理论家之一。他提出「结构化理论」（structuration theory）以克服结构与行动的二元对立（《社会的构成》,1984），又深入分析现代性的动力与后果（《现代性的后果》,1990、《现代性与自我认同》,1991），并提出「第三条道路」政治理论。其研究贯通社会学理论、现代性、全球风险与政治，是当代社会理论的综合者。",
+        works: [
+            "Capitalism and Modern Social Theory (《资本主义与现代社会理论》, 1971)",
+            "New Rules of Sociological Method (《社会学方法新规》, 1976)",
+            "The Constitution of Society: Outline of the Theory of Structuration (《社会的构成》, 1984)",
+            "The Consequences of Modernity (《现代性的后果》, 1990)",
+            "Modernity and Self-Identity (《现代性与自我认同》, 1991)",
+            "Beyond Left and Right (《超越左与右》, 1994)",
+            "The Third Way: The Renewal of Social Democracy (《第三条道路》, 1998)"
+        ],
+        research: [
+            {
+                title: "Structuration Theory (结构化理论)",
+                year: "1984",
+                method: "理论综合：整合行动者与结构、微观与宏观、客观与主观。",
+                sample: "社会实践中行动与结构的相互构成（概念性框架）",
+                conclusion: "吉登斯提出「结构的二重性」（duality of structure）：结构既是行动的媒介（约束/使能），又是行动的产物（被实践再生产）。社会结构并非外在固定实体，而是经由行动者持续的反思性实践不断「结构化」（structuration）的。个体行动者在结构制约中仍具能动性，二者不可二分。",
+                verified: true
+            },
+            {
+                title: "The Consequences of Modernity (现代性的后果)",
+                year: "1990",
+                method: "宏观现代性分析：识别现代性的动力机制与制度后果。",
+                sample: "现代制度（资本主义、工业化、监控、军事权力）及其全球扩展",
+                conclusion: "现代性的三大动力是：时空分离（time-space distanciation，超越时空约束）、脱域机制（disembedding，如专家系统、象征符号使互动脱离本地情境）与制度的反思性（reflexivity）。其结果包括「风险社会」、全球化、自我认同的不确定性，以及「失控的世界」的威胁。",
+                verified: true
+            },
+            {
+                title: "Modernity and Self-Identity (现代性与自我认同)",
+                year: "1991",
+                method: "社会心理学分析：考察现代性条件下个体自我认同的建构。",
+                sample: "现代个体在风险与多元选择中的身份建构",
+                conclusion: "在现代性中，自我认同成为个体必须持续「反思性地建构」的工程：个体依赖专家系统与日常生活实践塑造一致的自我叙事。后传统秩序既带来自由选择，也带来认同焦虑与「本体性安全」（ontological security）的脆弱。",
+                verified: true
+            },
+            {
+                title: "The Third Way (第三条道路)",
+                year: "1998",
+                method: "政治理论分析：提出超越传统左右对立的当代社会民主纲领。",
+                sample: "全球化时代的福利国家、市场与社会民主改革",
+                conclusion: "面对全球化与福利国家危机，吉登斯主张「第三条道路」：超越古典社会主义（国家干预）与新自由主义（放任市场）的对立，寻求国家、市场与公民社会的平衡，强调积极福利、机会平等与风险治理。这一纲领成为1990年代欧美中左政治（如布莱尔）的思想基础。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 46,
+        name: "Manuel Castells",
+        nameEn: "曼纽尔·卡斯特",
+        school: "Globalization Theory",
+        birth: 1942, death: null,
+        nationality: "Spain",
+        activeStart: 1970, activeEnd: 2026,
+        bio: "西班牙社会学家与传播学者，「网络社会」（network society）理论的创立者。其《信息时代三部曲》（《网络社会的兴起》,1996；《认同的力量》,1997；《千年的终结》,1998）系统分析了信息与通信技术如何重组经济、权力与空间，提出「流动空间」（space of flows）、「网络企业」与「认同政治」等概念，是全球化和媒介社会研究的奠基之作。",
+        works: [
+            "The Information Age: Economy, Society and Culture (《信息时代三部曲》, 1996–2000)",
+            "The Rise of the Network Society (《网络社会的兴起》, 1996)",
+            "The Power of Identity (《认同的力量》, 1997)",
+            "End of Millennium (《千年的终结》, 1998)",
+            "Communication Power (《传播权力》, 2009)",
+            "Networks of Outrage and Hope (《愤怒与希望的网络》, 2012)"
+        ],
+        research: [
+            {
+                title: "The Rise of the Network Society (网络社会的兴起)",
+                year: "1996",
+                method: "宏观比较与制度分析：考察信息经济与网络组织的全球扩张。",
+                sample: "信息时代的资本主义、生产组织、劳动与技术变迁（跨国案例）",
+                conclusion: "信息与通信技术促生了「网络社会」：经济与社会被网络逻辑重新组织，生产由「网络企业」按实时、灵活、全球化的方式运作。信息成为生产与权力的核心资源，「信息资本主义」兴起，社会结构由「网络」与「流动」重新定义。",
+                verified: true
+            },
+            {
+                title: "Space of Flows and Space of Places (流动空间与地方空间)",
+                year: "1996",
+                method: "空间社会分析：考察信息社会中空间的组织逻辑。",
+                sample: "全球金融中心、电信网络、都市区与地方社区的空间结构",
+                conclusion: "网络社会的主导空间逻辑是「流动空间」（space of flows）——由全球连接节点（金融中心、通信枢纽）构成的实时流动网络；它与承载具体日常生活的「地方空间」（space of places）相分离并支配后者。空间因此不再以固定地域为主导，而以网络与流动为组织原则。",
+                verified: true
+            },
+            {
+                title: "Identity and Power in the Network Society (网络社会中的认同与权力)",
+                year: "1997",
+                method: "社会运动与认同分析：考察全球化条件下集体认同的建构。",
+                sample: "民族主义、宗教原教旨、女权与环保等社会运动",
+                conclusion: "面对网络社会的流动性，个体与群体通过建构集体认同寻求意义与抵抗。卡斯特区分合法性认同、抗拒性认同与计划性认同；在全球化与身份焦虑中，抗拒性认同（如民族、宗教、社群运动）成为社会动员与政治的重要力量。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 47,
+        name: "Arjun Appadurai",
+        nameEn: "阿尔君·阿帕杜莱",
+        school: "Globalization Theory",
+        birth: 1949, death: null,
+        nationality: "India / United States",
+        activeStart: 1980, activeEnd: 2026,
+        bio: "印裔美国人类学家，全球化与文化研究的重要理论家。其《广义现代性》（1996）提出著名的「全球文化流动五种景观」（ethnoscapes、mediascapes、technoscapes、financescapes、ideoscapes），主张全球化是文化流动的多元、断裂过程，并把「想象」（imagination）视为当代社会力量；其《物的社会生命》（1986）开创了物质文化研究方法。",
+        works: [
+            "The Social Life of Things: Commodities in Cultural Perspective (《物的社会生命》, 1986, 主编)",
+            "Modernity at Large: Cultural Dimensions of Globalization (《广义现代性：全球化的文化维度》, 1996)",
+            "Fear of Small Numbers: An Essay on the Geography of Anger (《对少数人的恐惧》, 2006)",
+            "The Future as Cultural Fact (《作为文化事实的未来》, 2013)"
+        ],
+        research: [
+            {
+                title: "Global Cultural Flows and the Five 'Scapes' (全球文化流动与五种景观)",
+                year: "1996",
+                method: "人类学与全球化分析：考察跨国文化流动的多元、断裂结构。",
+                sample: "移民、媒介、技术、资本与意识形态的跨国流动（全球案例）",
+                conclusion: "全球化由五种平行的「景观」流动构成：族群景观（人的流动）、媒体景观（图像与叙事）、技术景观（技术与专家）、金融景观（资本流动）、意识形态景观（政治观念）。这些流动之间并非同步，而是「断裂」（disjuncture）的；全球化因此是多元、不均匀的文化过程而非单向的同质化。",
+                verified: true
+            },
+            {
+                title: "Imagination as Social Practice (想象作为社会实践)",
+                year: "1996",
+                method: "文化理论分析：把「想象」从个人心理提升为集体社会力量。",
+                sample: "媒介影像、跨国迁徙中的想象与身份实践",
+                conclusion: "在媒介饱和与全球流动的时代，「想象」成为关键的社会实践：个体与群体借由媒介提供的影像构想可能的自我与集体认同。想象与行动相联结，构成当代政治与文化动员的基础，也是「广义现代性」的核心动力。",
+                verified: true
+            },
+            {
+                title: "The Social Life of Things and Deterritorialization (物的社会生命与去领土化)",
+                year: "1986–1996",
+                method: "物质文化研究与价值分析：考察商品在不同情境中的意义流转。",
+                sample: "商品从生产到消费、从赠予到收藏的「社会生命」",
+                conclusion: "物（商品）具有「社会生命」：其价值与意义随流通情境而变化，价值由社会文化过程赋予而非固有。在全球流动中，文化、人与物「去领土化」（deterritorialization）——意义与认同脱离固定地域，重新在跨国网络中组合。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 48,
+        name: "Roland Robertson",
+        nameEn: "罗兰·罗伯森",
+        school: "Globalization Theory",
+        birth: 1938, death: null,
+        nationality: "United Kingdom / United States",
+        activeStart: 1970, activeEnd: 2026,
+        bio: "英美社会学家，全球化理论的重要奠基人。其《全球化：社会理论与全球文化》（1992）把全球化定义为「世界的压缩与全球意识的增强」，并提出「全球地方化」（glocalization）——全球与地方并非对立，而是相互交织的辩证过程。他主张研究「全球场」（global field）中文化的相对化与普遍化，是全球化文化研究的核心理论家。",
+        works: [
+            "Globalization: Social Theory and Global Culture (《全球化：社会理论与全球文化》, 1992)",
+            "Sociological Theory and Comparative Religion (1982)",
+            "Talcott Parsons: Theorist of Modernity (1991, 合编)",
+            "Global Modernities (《全球现代性》, 1997, 与怀特合编)"
+        ],
+        research: [
+            {
+                title: "Globalization as Compression and Global Consciousness (全球化：压缩与全球意识)",
+                year: "1992",
+                method: "理论与历史分析：考察「世界」如何被建构为单一社会与文化场域。",
+                sample: "全球交流的历史进程、民族国家与文化认同的全球关联",
+                conclusion: "全球化既是「世界的压缩」（时间—空间缩小），也是「全球意识」的增强——把世界视为单一整体的意识不断深化。全球化并非纯粹经济过程，而是牵涉文化相对化、全球场与认同重构的多维过程。",
+                verified: true
+            },
+            {
+                title: "Glocalization (全球地方化)",
+                year: "1990s",
+                method: "概念建构与理论分析：综合「全球化」与「地方化」的双向过程。",
+                sample: "全球品牌、媒体、规范在地力情境中的重新本土化",
+                conclusion: "全球化并非抹平地方的趋同，而是「全球地方化」（glocalization）：全球趋势在各地被重新诠释、采纳与本土化，地方亦反向塑造全球。全球与地方因此是相互构成的关系，反对把全球化简单等同为同质化。",
+                verified: true
+            },
+            {
+                title: "The Global Field and Relativization (全球场与相对化)",
+                year: "1992",
+                method: "理论分析：把全球文化当作由多元主体相互构成的「全球场」。",
+                sample: "国家、民族、个体、国际组织与全球共同体的相互关系",
+                conclusion: "世界正成为一个「全球场」：个体、社会、民族国家、国际体系与全球人类共同体等单元在相互关联中构成，各自因全球化而「相对化」（relativization）——其相对地位、认同与合法性被重新界定。文化因此在全球与地方之间不断再协商。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 49,
+        name: "Georg Simmel",
+        nameEn: "格奥尔格·齐美尔",
+        school: "Interpretive Sociology",
+        birth: 1858, death: 1918,
+        nationality: "Germany",
+        activeStart: 1890, activeEnd: 1918,
+        bio: "德国社会学家与哲学家，形式社会学（formal sociology）的奠基人，与涂尔干、韦伯同属古典社会学奠基者。他主张社会学研究「社会互动形式」（支配、交换、冲突、时尚、陌生、货币关系等），并深刻分析了现代都市生活、货币文化与个体自由。《货币哲学》（1900）与《大都市与精神生活》（1903）被誉为现代性分析的经典，其「社会几何学」与「陌生人」概念对符号互动论、微观社会学与城市社会学影响深远。",
+        works: [
+            "On Social Differentiation (《论社会分化》, 1890)",
+            "The Philosophy of Money (《货币哲学》, 1900)",
+            "Soziologie: Untersuchungen über die Formen der Vergesellschaftung (《社会学：论社会化的形式》, 1908)",
+            "The Metropolis and Mental Life (《大都市与精神生活》, 1903, 论文)",
+            "The Stranger (《陌生人》, 1908, 论文)",
+            "The Philosophy of Landscape (1913)"
+        ],
+        research: [
+            {
+                title: "Formal Sociology and the Forms of Sociation (形式社会学与社会化的形式)",
+                year: "1908",
+                method: "方法论建构：抽象出独立于具体内容的「社会互动形式」。",
+                sample: "支配、交换、冲突、竞争、结盟、陌生等互动形式",
+                conclusion: "社会学应研究「社会化的形式」（forms of sociation）——普遍存在于各种内容中的互动结构，如等级关系、竞争、交换、冲突等。齐美尔主张以「形式」为核心建立社会学，从而与历史学及具体社会科学区分开来，为微观与结构分析提供工具。",
+                verified: true
+            },
+            {
+                title: "The Philosophy of Money (货币哲学)",
+                year: "1900",
+                method: "哲学—社会分析：考察货币作为普遍等价物对社会互动与个体经验的重塑。",
+                sample: "货币经济与现代都市生活中的交换、距离与自由",
+                conclusion: "货币作为普遍的等价物使社会互动客观化、理性化与可计算化：它把一切价值化约为数量，扩大交换范围也拉大人际「距离」。货币文化既带来个体自由与独立性，也造成精神上的冷漠、焦虑与「普遍量化」的生活态度。",
+                verified: true
+            },
+            {
+                title: "The Metropolis and Mental Life (大都市与精神生活)",
+                year: "1903",
+                method: "社会心理学分析：考察都市环境对个体心理的影响。",
+                sample: "现代大都市中密集刺激、货币经济与匿名化交往",
+                conclusion: "都市生活以高强度、快节奏的刺激和货币关系为特征，迫使个体发展出「理性的、计算的精神」，以冷漠与疏离（blasé attitude）来抵御过度刺激并保护自身。都市既提供前所未有的自由与匿名性，也以神经紧张和孤独为代价，构成现代个体的典型境遇。",
+                verified: true
+            },
+            {
+                title: "The Stranger and Social Distance (陌生人与社会距离)",
+                year: "1908",
+                method: "形式社会学分析：把「陌生人」作为一种独特的社会互动形式加以考察。",
+                sample: "旅居者、外乡人、商人在群体中的位置",
+                conclusion: "「陌生人」是既在群体之中又不完全属于群体的社会形式：他保持客观与距离，因而能提供客观判断与中介功能（如商人、中间人）。陌生人的存在揭示「社会距离」如何塑造认同与互动，这一分析成为理解移民、边缘与客观性的经典框架。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 50,
+        name: "Ferdinand Tönnies",
+        nameEn: "费迪南·滕尼斯",
+        school: "Functionalism",
+        birth: 1855, death: 1936,
+        nationality: "Germany",
+        activeStart: 1880, activeEnd: 1936,
+        bio: "德国社会学家，古典社会学的奠基者之一，以《共同体与社会》（1887）闻名。他提出「共同体（Gemeinschaft）与社会（Gesellschaft）」的理想类型对比，区分传统社会以情感、血缘和习惯为基础的结合与现代以理性、契约和利益为基础的社会，这一划分深刻影响了后来关于现代性、社区与社会整合的讨论，也是社会学最早的类型学之一。",
+        works: [
+            "Gemeinschaft und Gesellschaft (《共同体与社会》, 1887)",
+            "Einführung in die Soziologie (《社会学导论》, 1931)",
+            "Kritik der öffentlichen Meinung (《公共舆论批判》, 1922)",
+            "Die Entwicklung der sozialen Frage (《社会问题的发展》, 1907)"
+        ],
+        research: [
+            {
+                title: "Gemeinschaft and Gesellschaft (共同体与社会)",
+                year: "1887",
+                method: "理想类型（ideal type）建构：以概念对比分析传统与现代社会的组织原则。",
+                sample: "从乡村、家族、教会到城市、市场、国家的社会组织形态",
+                conclusion: "共同体（Gemeinschaft）建立在情感、血缘、习惯与共同生活之上，关系亲密而稳定；社会（Gesellschaft）建立在理性契约、个人利益与工具性交换之上，关系疏离而计算。现代转型表现为从共同体向社会过渡，但两种类型在实际社会中并存，此框架成为社会类型学的经典。",
+                verified: true
+            },
+            {
+                title: "Natural Will and Rational Will (本质意志与选择意志)",
+                year: "1887",
+                method: "概念建构：以两种意志类型解释共同体与社会的基础。",
+                sample: "共同体基于「本质意志」（自然、情感导向）vs 社会基于「选择意志」（理性、计算导向）",
+                conclusion: "共同体的根基是「本质意志」（Wesenwille）——自然生长、情感与习惯驱动的意志；社会的根基是「选择意志」（Kürwille）——理性计算、权衡利益的选择。意志类型的差异解释了为何传统关系亲密而现代关系工具化，构成滕尼斯社会理论的心理学—社会学基础。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 51,
+        name: "Vilfredo Pareto",
+        nameEn: "维尔弗雷多·帕累托",
+        school: "Rational Choice Theory",
+        birth: 1848, death: 1923,
+        nationality: "Italy",
+        activeStart: 1890, activeEnd: 1923,
+        bio: "意大利经济学家与社会学家，帕累托最优、精英循环理论与非逻辑行动分析的代表。作为经济学家的《政治经济学手册》（1906）提出「帕累托最优」；作为社会学家的《普通社会学通论》（1916）区分逻辑行动与非逻辑行动，提出「剩余物」（residues）与「派生」（derivations）概念，并以「精英循环」解释权力更替，是精英理论与理性选择分析的重要先驱。",
+        works: [
+            "Manual of Political Economy (《政治经济学手册》, 1906)",
+            "Les Systèmes Socialistes (《社会主义体系》, 1902–1903)",
+            "Treatise on General Sociology (《普通社会学通论》, 1916)",
+            "The Mind and Society (《心灵与社会》, 1935, 英译本)"
+        ],
+        research: [
+            {
+                title: "Logical and Non-Logical Actions (逻辑行动与非逻辑行动)",
+                year: "1916",
+                method: "方法论分析：区分以目的—手段理性为导向的行动与受情感/习惯驱动的行动。",
+                sample: "经济、政治与日常生活中的行动类型",
+                conclusion: "帕累托区分逻辑行动（其目标与手段在客观上一致、理性可计算）与非逻辑行动（受情感、信仰、习惯等非理性力量驱动）。他主张社会大部分行为是非逻辑的，须用「剩余物」与「派生」加以解释，从而批判把社会简化为理性计算的倾向。",
+                verified: true
+            },
+            {
+                title: "Residues and Derivations (剩余物与派生)",
+                year: "1916",
+                method: "分类分析：识别非逻辑行动背后的恒常驱动力及其论证掩饰。",
+                sample: "宗教信仰、政治口号、意识形态中的情感基础与合理化论证",
+                conclusion: "非逻辑行动由「剩余物」（residues，恒常的情感与本能驱动力，如社交性、组合本能）所推动，而以「派生」（derivations，表面的合理化论证、信仰与口号）加以掩饰。社会行为因此是情感基础与理性化外衣的结合，这一分析构成帕累托社会学的核心。",
+                verified: true
+            },
+            {
+                title: "The Circulation of Elites (精英循环)",
+                year: "1916",
+                method: "历史分析：考察精英更替与社会变迁的机制。",
+                sample: "历史中「狮子型」（保守强力）与「狐狸型」（灵活智巧）精英的交替",
+                conclusion: "社会由少数精英统治，精英持续发生「循环」（circulation）：当精英僵化、失去能力与合法性时，新兴精英取而代之。帕累托以「狮子型/狐狸型」精英的交替说明权力更替的周期性，为精英理论与权力社会学奠定基础。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 52,
+        name: "Norbert Elias",
+        nameEn: "诺贝特·埃利亚斯",
+        school: "Process Sociology",
+        birth: 1897, death: 1990,
+        nationality: "Germany / United Kingdom",
+        activeStart: 1930, activeEnd: 1990,
+        bio: "德裔英国社会学家，过程社会学（figurational/process sociology）的创立者。其两卷本《文明的进程》（1939）以历史社会学分析西方「文明化进程」——暴力减少、情感管控增强、身体礼仪与羞耻感的规范化，并把这一过程与国家的中央集权、人际相互依赖网络（figuration）相联系。他还提出「形态」概念，主张以长时段、关系性的视角理解社会，晚年研究知识、个体化与死亡。",
+        works: [
+            "The Civilizing Process, Vols. 1–2 (《文明的进程》两卷, 1939)",
+            "The Court Society (《宫廷社会》, 1969)",
+            "What Is Sociology? (《什么是社会学》, 1970)",
+            "The Established and the Outsiders (《既得者与外者》, 1965, 与斯科特森合著)",
+            "The Society of Individuals (《个体的社会》, 1987)",
+            "The Loneliness of the Dying (《临终者的孤独》, 1985)"
+        ],
+        research: [
+            {
+                title: "The Civilizing Process (文明的进程)",
+                year: "1939",
+                method: "历史社会学与文献分析：比较中世纪以来欧洲的礼仪手册、宫廷行为规范与社会结构。",
+                sample: "中世纪至近代欧洲的餐桌礼仪、身体行为、暴力控制与宫廷生活史料",
+                conclusion: "西方社会的「文明化」是长期过程：通过宫廷化、国家中央集权与社会相互依赖的加深，暴力逐渐被垄断与内化，情感与身体行为受到更严格的自控（羞耻与难堪感的增强）。文明的自我克制并非「进步」的自然结果，而是权力结构与长程社会变迁的产物。",
+                verified: true
+            },
+            {
+                title: "Figurational Sociology (形态社会学)",
+                year: "1960s–1970",
+                method: "理论建构：以「形态/相互依赖网络」（figuration）取代静态的个体—社会二分。",
+                sample: "权力平衡、地位竞争与社会中的相互依赖关系网",
+                conclusion: "社会由无数相互依赖的行动者构成的「形态」（figurations）组成，权力在这些网络中不断移动与平衡。个体与社会并非对立实体，而是同一形态的不可分环节；社会学应以关系性、长时段的过程分析理解社会变迁。",
+                verified: true
+            },
+            {
+                title: "The Established and the Outsiders (既得者与外者)",
+                year: "1965",
+                method: "社区研究（与斯科特森合作）：分析群体间的排斥与权力差异。",
+                sample: "英国一个工薪社区中「既得者」（established）群体对「外者」（outsiders）群体的排斥",
+                conclusion: "即便在经济差异不大的群体之间，「既得者」也通过「污名化」（stigmatization）与「别化」（图式化）维持对「外者」的排斥与权力优势。排斥的动力源于相互依赖网络中的权力不平衡而非单纯经济差异，为理解族群与阶层冲突提供了过程—关系视角。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 53,
+        name: "Jeffrey C. Alexander",
+        nameEn: "杰弗里·亚历山大",
+        school: "Neofunctionalism",
+        birth: 1947, death: null,
+        nationality: "United States",
+        activeStart: 1980, activeEnd: 2026,
+        bio: "美国社会学家，新功能主义（neofunctionalism）的代表人物，也是当代「强文化纲领」（strong program in cultural sociology）的推动者。其《社会学理论逻辑》（1982–1983）主张重建帕森斯传统并整合冲突、行动与文化；《市民领域》（2006）以文化社会学分析民主整合；他与合作者发展出「文化创伤」「社会表演」等概念，强调文化的自主性与象征结构的解释力。",
+        works: [
+            "Theoretical Logic in Sociology (《社会学理论逻辑》四卷, 1982–1983)",
+            "Neofunctionalism and After (《新功能主义及其后》, 1998)",
+            "The Civil Sphere (《市民领域》, 2006)",
+            "Cultural Trauma and Collective Identity (《文化创伤与集体认同》, 2004, 合编)",
+            "Performance and Power (《表演与权力》, 2011)",
+            "The Dark Side of Modernity (2013)"
+        ],
+        research: [
+            {
+                title: "Neofunctionalism (新功能主义)",
+                year: "1982–1998",
+                method: "理论重建：批判并重构功能主义传统，整合冲突、行动、文化维度。",
+                sample: "帕森斯功能主义与冲突、交换、互动理论的综合（概念性框架）",
+                conclusion: "新功能主义在保留结构—功能分析的同时，引入冲突、行动者能动性与文化符号维度，修正了帕森斯对均衡与共识的过度强调。亚历山大主张社会理论应兼顾结构与行动、冲突与整合、物质与文化，形成多向度（multidimensional）的社会学。",
+                verified: true
+            },
+            {
+                title: "The Civil Sphere (市民领域)",
+                year: "2006",
+                method: "文化社会学分析：考察民主整合与文化编码。",
+                sample: "美国等民主社会中的市民领域、社会运动与包容/排斥结构",
+                conclusion: "「市民领域」（civil sphere）由文化符号（如「纯洁/污秽」二元码）、叙述与制度构成，是民主整合的基础：公民借由共享的市民文化把不同群体联结为「我们」，也借以排斥「污名」的他者。社会的团结与排斥因此既是制度性的，也是文化符号性的。",
+                verified: true
+            },
+            {
+                title: "The Strong Program in Cultural Sociology (文化社会学强纲领)",
+                year: "1990s–2000s",
+                method: "诠释与结构分析：主张文化具有相对自主性，须以「文本」方式解读其内部结构。",
+                sample: "社会仪式、创伤叙事、政治表演与文化象征",
+                conclusion: "「强文化纲领」主张文化不是上层建筑的附属或被动变量，而是具有自身结构与自主解释力的领域：应像分析文本一样分析社会意义的结构、二元码与叙述。文化由此被置于社会解释的中心，与利益和结构并重。",
+                verified: true
+            },
+            {
+                title: "Cultural Trauma (文化创伤)",
+                year: "2004",
+                method: "集体记忆与叙事分析：考察社会如何把灾难建构为集体认同的创伤。",
+                sample: "大屠杀、战争、灾难等事件的集体表征与记忆建构",
+                conclusion: "文化创伤不是事件的自动后果，而是经由表征、叙事与解释过程被「建构」的集体记忆：社会行动者（媒体、精英、知识分子）把特定事件塑造为威胁集体认同的创伤，从而重新界定「我们是谁」。创伤由此成为集体认同建构的机制。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 54,
+        name: "Ulrich Beck",
+        nameEn: "乌尔里希·贝克",
+        school: "Risk Society / Second Modernity",
+        birth: 1944, death: 2015,
+        nationality: "Germany",
+        activeStart: 1980, activeEnd: 2015,
+        bio: "德国社会学家，「风险社会」（risk society）理论与「第二现代性」的创立者。其《风险社会》（1986）论证现代社会从工业社会转向风险社会——核能、生态、金融等现代化风险无法被控制与归因，成为新的社会结构与政治中心；并提出「反思性现代化」（reflexive modernization）与「世界风险社会」。其「个体化」（individualization）命题也深刻影响了对当代生活世界的分析。",
+        works: [
+            "Risk Society: Towards a New Modernity (《风险社会》, 1986)",
+            "Ecological Enlightenment (《生态启蒙》, 1991)",
+            "Reflexive Modernization: Politics, Tradition and Aesthetics in the Modern Social Order (《反思性现代化》, 1994, 合著)",
+            "World Risk Society (《世界风险社会》, 1999)",
+            "Individualization (《个体化》, 2002, 与贝克-格恩斯海姆合著)",
+            "Power in the Global Age (《全球化时代的权力》, 2005)"
+        ],
+        research: [
+            {
+                title: "Risk Society (风险社会)",
+                year: "1986",
+                method: "理论诊断：分析现代化副产物（风险）如何重构社会结构与政治。",
+                sample: "核事故、生态退化、化学污染、基因技术等现代化风险的全球分布",
+                conclusion: "现代性在创造财富的同时也生产「风险」：核、生态、化学与基因风险具有全球性、不可见、难以归因与不可逆的特征。风险社会意味着风险取代阶级成为新的社会分层与政治冲突轴线——「风险的分担」与「财富的分配」并重，个体被卷入无法控制的全球风险之中。",
+                verified: true
+            },
+            {
+                title: "Reflexive Modernization (反思性现代化)",
+                year: "1994",
+                method: "理论分析：区分「第一现代性」（简单现代化）与「第二现代性」（反思性现代化）。",
+                sample: "工业社会自我消解、向风险社会过渡的过程",
+                conclusion: "反思性现代化指现代性反过来批判、解构自身的前提（科层、民族国家、家庭、充分就业等）：现代化越成功，越瓦解其自身制度基础，使社会进入不确定的「第二现代性」。现代化不再是进步叙事，而是持续的自我质疑与自我改造。",
+                verified: true
+            },
+            {
+                title: "World Risk Society and Global Risks (世界风险社会与全球风险)",
+                year: "1999",
+                method: "宏观全球分析：考察风险的跨国化与治理困境。",
+                sample: "全球气候、金融危机、跨国污染与恐怖主义等世界风险",
+                conclusion: "在全球化条件下，风险跨越国界成为「世界风险」：任何国家都难以独善其身，风险的制造与分配在全球尺度上展开。这要求超越民族国家的风险治理与「世界主义」（cosmopolitan）政治，贝克由此提出「世界主义范式」以应对全球风险与跨域问题。",
+                verified: true
+            },
+            {
+                title: "Individualization Thesis (个体化命题)",
+                year: "2002",
+                method: "社会结构分析：考察制度变迁如何把个体从传统纽带中解放并推向自我负责。",
+                sample: "就业、家庭、阶级认同与福利制度中的个体化趋势",
+                conclusion: "后工业社会通过制度安排（劳动市场、福利、教育）把个体从阶级、家庭与固定身份中「脱嵌」（disembedding），个体被迫在流动与风险中自行建构生活与身份（「为己而活」）。但这种「个体化」同时伴随标准化的制度约束与新的不安全感，个体自由与风险并存。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 55,
+        name: "George Ritzer",
+        nameEn: "乔治·瑞泽尔",
+        school: "Globalization Theory",
+        birth: 1940, death: null,
+        nationality: "United States",
+        activeStart: 1970, activeEnd: 2026,
+        bio: "美国社会学家，以「麦当劳化」（McDonaldization）理论闻名。其《麦当劳社会》（1993）把韦伯的理性化命题应用于当代社会，指出效率、可计算性、可预测性与控制正在像快餐连锁一样「麦当劳化」教育、医疗、劳动等各领域；《虚无的全球化》（2004）考察全球标准化产品对「实质性内容」的掏空；《给祛魅的世界重新赋魅》（1999）分析消费空间的奇观化。他也是美国主流社会学理论教科书作者。",
+        works: [
+            "The McDonaldization of Society (《麦当劳社会》, 1993)",
+            "Enchanting a Disenchanted World (《给祛魅的世界重新赋魅》, 1999)",
+            "The Globalization of Nothing (《虚无的全球化》, 2004)",
+            "Explorations in the Sociology of Consumption (《消费社会学探索》, 2001)",
+            "Sociological Theory (《社会学理论》, 1988, 教科书)"
+        ],
+        research: [
+            {
+                title: "The McDonaldization of Society (社会的麦当劳化)",
+                year: "1993",
+                method: "韦伯理性化命题的当代应用：以快餐连锁模式分析现代社会组织的特征。",
+                sample: "麦当劳式的快餐厅、教育、医疗、旅游等组织的运行逻辑",
+                conclusion: "当代社会日益按麦当劳模式组织，体现四个维度：效率（最大化产出/最小投入）、可计算性（量化而非质化）、可预测性（标准化、同质化）、控制（以技术与非人系统控制员工与顾客）。麦当劳化带来便利与效率，却造成理性化悖论——「理性的非理性」（irrationality of rationality），如枯燥、异化与环境破坏。",
+                verified: true
+            },
+            {
+                title: "The Globalization of Nothing (虚无的全球化)",
+                year: "2004",
+                method: "宏观消费分析：考察全球标准化如何掏空产品的「实质内容」。",
+                sample: "全球连锁、标准产品、无地方性的消费空间（机场、商场、主题度假村）",
+                conclusion: "全球化进程使「虚无」（nothing）——缺乏独特地方内容、标准化、可复制的社会形式——日益扩张：全球连锁与标准产品取代本地、独特、有实质内容的社会形式。全球化因此不必然带来丰富多样，反而可能制造「到处都相同」的消费景观。",
+                verified: true
+            },
+            {
+                title: "Enchanting a Disenchanted World (给祛魅的世界重新赋魅)",
+                year: "1999",
+                method: "消费社会学分析：考察消费空间的奇观化与「重新赋魅」。",
+                sample: "主题购物中心、赌场、迪斯尼式消费场所的「奇观」营造",
+                conclusion: "韦伯说理性化使世界祛魅，但消费社会通过营造「奇观」（spectacle）给消费空间「重新赋魅」：主题商场、品牌体验、娱乐化购物制造令人入迷的「魅」，以吸引消费。这种「再赋魅」是理性化与幻象消费的结合，构成当代消费文化的特征。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 56,
+        name: "Richard Sennett",
+        nameEn: "理查德·桑内特",
+        school: "Conflict Theory (contemporary)",
+        birth: 1943, death: null,
+        nationality: "United States",
+        activeStart: 1970, activeEnd: 2026,
+        bio: "美国社会学家与城市规划学者，城市社会学与文化批判的代表。其《公共人的衰落》（1977）分析公共领域与城市公共生活的萎缩；《性格的腐蚀》（1998）揭示新资本主义的灵活就业如何侵蚀人格与长期承诺；《手艺》（2008）倡导以「技艺伦理」抵抗消费与灵活资本的异化；《新资本主义的文化》（2006）系统诊断当代工作文化的价值危机。其研究聚焦现代性中的人性、工作、城市与伦理。",
+        works: [
+            "The Uses of Disorder (《无序的用途》, 1970)",
+            "The Fall of Public Man (《公共人的衰落》, 1977)",
+            "Flesh and Stone: The Body and the City in Western Civilization (《肉体与石头》, 1994)",
+            "The Corrosion of Character: The Personal Consequences of Work in the New Capitalism (《性格的腐蚀》, 1998)",
+            "The Culture of the New Capitalism (《新资本主义的文化》, 2006)",
+            "The Craftsman (《手艺》, 2008)",
+            "Together: The Rituals, Pleasures and Politics of Cooperation (《共处》, 2012)"
+        ],
+        research: [
+            {
+                title: "The Corrosion of Character (性格的腐蚀)",
+                year: "1998",
+                method: "深度访谈与历史—社会分析：考察新资本主义工作制度对个人性格与价值的影响。",
+                sample: "白领与中层管理者在裁员、灵活就业中的职业经历访谈",
+                conclusion: "新资本主义以灵活、短期、无承诺为特征的就业，破坏了长期忠诚与「性格」（character）的稳定性：个体被迫不断适应、放弃长期认同，导致「无根」、焦虑与道德感的腐蚀。灵活不仅是自由，也带来意义的丧失与人格的碎片化。",
+                verified: true
+            },
+            {
+                title: "The Fall of Public Man (公共人的衰落)",
+                year: "1977",
+                method: "历史—城市分析：考察18世纪以来公共生活与公共人（public man）的变迁。",
+                sample: "从沙龙、剧院、街头到现代城市与媒体的公共交往形式",
+                conclusion: "现代社会中「公共人」趋于衰落：人们从积极参与公共空间的陌生人交往，退入私人与亲密领域，公共表达让位于私密自恋。桑内特批判这种对「亲密性」的崇拜如何掏空公共生活与城市民主，主张恢复作为伦理实践的公共交往。",
+                verified: true
+            },
+            {
+                title: "The Craftsman and the Ethic of Work (手艺与工作的伦理)",
+                year: "2008",
+                method: "历史与文化分析：考察「技艺」（craftsmanship）作为工作的伦理与身份。",
+                sample: "工匠、程序员、医生、音乐家等以技艺为核心的工作实践",
+                conclusion: "「手艺」——对所做之事的专注、精益求精与长时间磨练——提供一种超越消费与工具理性的工作伦理与自我实现。桑内特主张以技艺伦理对抗新资本主义的碎片化与异化，重建工作中「为事而做」的意义。",
+                verified: true
+            }
+        ]
+    },
+    {
+        id: 57,
+        name: "Patricia Hill Collins",
+        nameEn: "帕特里夏·希尔·柯林斯",
+        school: "Feminist Sociology",
+        birth: 1948, death: null,
+        nationality: "United States",
+        activeStart: 1980, activeEnd: 2026,
+        bio: "美国黑人女性主义社会学家，「交叉性」（intersectionality）理论的奠基人之一。其《黑人女性主义思想》（1990）以黑人女性的经验发展出认识论立场，揭示种族、阶级与性别交叉构成的「压迫矩阵」；她系统阐发「交叉性」以分析多重身份与权力结构，也是美国社会学协会首位黑人女主席，其思想深刻影响女性主义、批判种族理论与当代社会理论。",
+        works: [
+            "Black Feminist Thought: Knowledge, Consciousness, and the Politics of Empowerment (《黑人女性主义思想》, 1990)",
+            "Race, Class, and Gender: An Anthology (《种族、阶级与性别》, 1990, 合编)",
+            "Fighting Words: Black Women and the Search for Justice (《斗争之词》, 1998)",
+            "From Black Power to Hip Hop: Racism, Nationalism, and Feminism (2006)",
+            "Intersectionality (《交叉性》, 2016, 与比奇合著)"
+        ],
+        research: [
+            {
+                title: "Black Feminist Standpoint Epistemology (黑人女性主义立场认识论)",
+                year: "1990",
+                method: "立场理论与跨学科分析：从黑人女性的生活经验出发建构知识。",
+                sample: "美国黑人女性的家庭、劳动、教会与政治经验",
+                conclusion: "黑人女性因同时身处种族、阶级与性别交叉的压迫结构，其生活经验提供独特的认识论立场：她们对压迫有「双重意识」与批判洞见。柯林斯主张以这种立场重建知识，挑战白人男性中心与主流社会学的认识论霸权。",
+                verified: true
+            },
+            {
+                title: "Intersectionality (交叉性)",
+                year: "1990–2016",
+                method: "理论与分析框架：考察多重身份（种族、阶级、性别等）如何交叉构成独特的压迫与经验。",
+                sample: "黑人女性在职场、家庭与社会运动中的多重身份处境",
+                conclusion: "交叉性主张种族、阶级、性别等轴线相互交叉、共同运作，不能孤立分析：黑人女性的压迫不能被还原为「种族」或「性别」任一方面。分析社会不平等须同时把握多重身份与权力结构的交织，这一框架成为当代社会批判的核心工具。",
+                verified: true
+            },
+            {
+                title: "The Matrix of Domination and Control (压迫与控制矩阵)",
+                year: "1990–2006",
+                method: "结构—文化分析：考察压迫如何在组织、社区与知识生产中运作。",
+                sample: "制度（教育、媒体、司法）、社区与日常互动中的压迫机制",
+                conclusion: "压迫以「矩阵」（matrix of domination）形式运作——在制度化、人际与内在化的多个层面交叉展开，既包含结构性的不平等，也包含文化与认知的支配。柯林斯主张同时分析结构与文化层面的控制，并强调被压迫者可能的抵抗与知识生产。",
+                verified: true
+            }
+        ]
+    },
+/* ---- DATA_END ---- */
+];
 
-            data.forEach(person => {
-                const card = document.createElement('div');
-                card.className = 'glass rounded-2xl p-6 card-hover flex flex-col';
-                card.innerHTML = `
-                    <div class="flex items-start justify-between mb-4">
-                        <div>
-                            <h3 class="font-serif text-xl font-bold text-primary mb-1">${person.name}</h3>
-                            <p class="text-sm text-primary/50">${person.nationality} · ${person.birth} – ${person.death || 'Present'}</p>
-                        </div>
-                        <span class="px-3 py-1 text-xs font-medium bg-secondary/10 text-secondary rounded-full whitespace-nowrap">
-                            ${person.field}
-                        </span>
-                    </div>
+/* ============ Bidirectional search engine ============ */
+let mode = 'byResearch';
+const $ = id => document.getElementById(id);
+const grid = $('grid'), empty = $('empty');
 
-                    <p class="text-sm text-primary/70 leading-relaxed mb-4">
-                        ${person.description}
-                    </p>
+function esc(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 
-                    <div class="mt-auto">
-                        <div class="pt-4 border-t border-primary/10 mb-3">
-                            <p class="text-xs text-primary/40 mb-2">Core Research</p>
-                            <div class="flex flex-wrap gap-2">
-                                ${person.cases.map(c => `
-                                    <span class="text-xs px-2 py-1 bg-primary/5 text-primary/70 rounded-md">
-                                        ${c}
-                                    </span>
-                                `).join('')}
-                            </div>
-                        </div>
+function schoolOf(s){ return s.school2 ? s.school+' / '+s.school2 : s.school }
 
-                        <div>
-                            <p class="text-xs text-primary/40 mb-2">Major Works</p>
-                            <div class="flex flex-wrap gap-2">
-                                ${person.works.map(work => `
-                                    <span class="text-xs px-2 py-1 bg-secondary/5 text-secondary/80 rounded-md">
-                                        ${work}
-                                    </span>
-                                `).join('')}
-                            </div>
-                        </div>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        function filterSociologists() {
-            const query = searchInput.value.trim().toLowerCase();
-            const fieldQuery = searchField.value;
-            const start = parseInt(yearStart.value) || 0;
-            const end = parseInt(yearEnd.value) || 9999;
-
-            const filtered = sociologists.filter(p => {
-                const textMatch = !query || 
-                    p.name.toLowerCase().includes(query) ||
-                    p.field.toLowerCase().includes(query) ||
-                    p.cases.some(c => c.toLowerCase().includes(query)) ||
-                    p.works.some(w => w.toLowerCase().includes(query)) ||
-                    p.description.toLowerCase().includes(query);
-                
-                const fieldMatch = !fieldQuery || p.field === fieldQuery;
-                
-                const yearMatch = p.activeEnd >= start && p.activeStart <= end;
-
-                return textMatch && fieldMatch && yearMatch;
-            });
-
-            renderCards(filtered);
-        }
-
-        // Event bindings
-        searchInput.addEventListener('input', filterSociologists);
-        searchField.addEventListener('change', filterSociologists);
-        yearStart.addEventListener('input', filterSociologists);
-        yearEnd.addEventListener('input', filterSociologists);
-
-        resetBtn.addEventListener('click', () => {
-            searchInput.value = '';
-            searchField.value = '';
-            yearStart.value = '';
-            yearEnd.value = '';
-            filterSociologists();
+function init(){
+    const sel = $('school');
+    SCHOOLS.forEach(s=>{const o=document.createElement('option');o.value=s;o.textContent=s;sel.appendChild(o)});
+    $('dbCount').textContent = scholars.length;
+    document.querySelectorAll('.tabbtn').forEach(b=>{
+        b.addEventListener('click',()=>{
+            document.querySelectorAll('.tabbtn').forEach(x=>x.classList.remove('active'));
+            b.classList.add('active');
+            mode = b.dataset.mode;
+            $('searchLabel').textContent = mode==='byResearch'
+                ? 'Research keyword (theory, case, method, topic)'
+                : 'Scholar name (full or partial)';
+            filter();
         });
+    });
+    $('q').addEventListener('input',filter);
+    $('school').addEventListener('change',filter);
+    $('y1').addEventListener('input',filter);
+    $('y2').addEventListener('input',filter);
+    $('resetBtn').addEventListener('click',()=>{ $('q').value='';$('school').value='';$('y1').value='';$('y2').value='';filter(); });
+    $('modalClose').addEventListener('click',()=>$('modal').classList.remove('open'));
+    $('modal').addEventListener('click',e=>{ if(e.target===$('modal')) $('modal').classList.remove('open'); });
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape') $('modal').classList.remove('open'); });
+    filter();
+}
 
-        // Initial render
-        filterSociologists();
-    </script>
+function matchesSchool(s,sc){ return !sc || s.school===sc || s.school2===sc }
+function matchesYear(s,y1,y2){
+    if(!y1 && !y2) return true;
+    const st = s.activeStart ?? s.birth, en = s.activeEnd ?? (s.death||2026);
+    if(y1 && en < y1) return false;
+    if(y2 && st > y2) return false;
+    return true;
+}
+
+function studyMatchesResearch(s, kw){
+    const k = kw.toLowerCase();
+    if(!k) return {ok:true, studies:s.research}; // blank -> show all scholars
+    const hits = s.research.filter(r=>{
+        const blob = [r.title,r.year,r.method,r.sample,r.conclusion].join(' ').toLowerCase();
+        return blob.includes(k);
+    });
+    // also match scholar-level text so scholar appears even if study not hit
+    const scholarHit = [s.name,s.bio,s.works.join(' ')].join(' ').toLowerCase().includes(k);
+    return {ok: hits.length>0 || scholarHit, studies: hits};
+}
+
+function studyMatchesScholar(s, kw){
+    const k = kw.toLowerCase();
+    if(!k) return {ok:true}; // blank -> show all scholars
+    return {ok:[s.name,s.nameEn||'',s.bio].join(' ').toLowerCase().includes(k)};
+}
+
+function filter(){
+    const q = $('q').value.trim();
+    const sc = $('school').value;
+    const y1 = parseInt($('y1').value)||0, y2 = parseInt($('y2').value)||0;
+    const blankQ = q==='';
+    let list = [];
+    if(mode==='byResearch'){
+        scholars.forEach(s=>{
+            if(!matchesSchool(s,sc) || !matchesYear(s,y1,y2)) return;
+            const m = studyMatchesResearch(s,q);
+            list.push({s, hitStudies:m.studies, visible:m.ok});
+        });
+    }else{
+        scholars.forEach(s=>{
+            if(!matchesSchool(s,sc) || !matchesYear(s,y1,y2)) return;
+            const m = studyMatchesScholar(s,q);
+            list.push({s, hitStudies:s.research, visible:m.ok});
+        });
+    }
+    render(list.filter(x=>x.visible), blankQ);
+}
+
+function render(list, blankQ){
+    grid.innerHTML='';
+    $('rsCount').textContent = list.length;
+    empty.classList.toggle('hidden', list.length>0);
+    list.forEach(({s,hitStudies})=>{
+        const card = document.createElement('div');
+        card.className = 'glass rounded-2xl p-6 card flex flex-col cursor-pointer';
+        card.addEventListener('click',()=>openModal(s));
+        const yrs = s.death ? s.birth+'–'+s.death : s.birth+'–present';
+        const max3 = hitStudies.slice(0,3);
+        card.innerHTML = `
+            <div class="flex items-start justify-between mb-3 gap-2">
+                <div>
+                    <h3 class="serif text-lg font-bold text-[#0F2B4D] leading-snug">${esc(s.name)}</h3>
+                    <p class="text-sm text-[#0F2B4D]/50 mt-1">${esc(s.nationality)} · ${yrs}</p>
+                </div>
+                <span class="chip whitespace-nowrap shrink-0">${esc(schoolOf(s))}</span>
+            </div>
+            <p class="text-sm text-[#0F2B4D]/70 leading-relaxed line-clamp-3 mb-4">${esc(s.bio)}</p>
+            <div class="mt-auto pt-3 border-t border-[#0F2B4D]/10">
+                <p class="text-xs text-[#0F2B4D]/40 mb-2">${blankQ?'All studies':(mode==='byResearch'?'Matched studies':'Studies in database')}</p>
+                <div class="flex flex-wrap gap-2">
+                    ${max3.length?max3.map(r=>`<span class="text-[11px] px-2 py-1 bg-[#0F2B4D]/5 text-[#0F2B4D]/70 rounded-md">${esc(r.title)}</span>`).join(''):`<span class="text-[11px] text-[#0F2B4D]/40 italic">Scholar-level match — open to explore</span>`}
+                    ${hitStudies.length>3?`<span class="text-[11px] px-2 py-1 text-[#0F2B4D]/50">+${hitStudies.length-3} more</span>`:''}
+                </div>
+            </div>
+        `;
+        grid.appendChild(card);
+    });
+}
+
+/* ============ Detail modal ============ */
+function openModal(s){
+    const b = $('modalBody');
+    const yrs = s.death ? s.birth+'–'+s.death : s.birth+'–present';
+    let w = '';
+    if(s.works && s.works.length){
+        w = `
+            <div class="mb-6">
+                <h4 class="text-xs uppercase tracking-wider text-[#0F2B4D]/40 font-semibold mb-3">Major Works</h4>
+                <ul class="grid md:grid-cols-2 gap-2">
+                    ${s.works.map(x=>`<li class="text-sm text-[#0F2B4D]/75 flex items-start gap-2"><span class="text-[#0F2B4D]/30 mt-1">•</span><span>${esc(x)}</span></li>`).join('')}
+                </ul>
+            </div>`;
+    }
+    let r = '';
+    if(s.research && s.research.length){
+        r = `
+            <div>
+                <h4 class="text-xs uppercase tracking-wider text-[#0F2B4D]/40 font-semibold mb-3">Studies & Research (${s.research.length})</h4>
+                <div class="space-y-3">
+                    ${s.research.map((x,i)=>`
+                        <details class="group glass rounded-xl overflow-hidden">
+                            <summary class="cursor-pointer list-none p-4 flex items-center justify-between gap-2 hover:bg-white/60 transition">
+                                <div class="flex items-center gap-2 min-w-0">
+                                    <span class="text-[#0F2B4D]/30 font-semibold">${String(i+1).padStart(2,'0')}</span>
+                                    <span class="text-sm font-medium text-[#0F2B4D] truncate">${esc(x.title)}</span>
+                                </div>
+                                <div class="flex items-center gap-2 shrink-0">
+                                    <span class="text-xs text-[#0F2B4D]/40">${esc(x.year||'n.d.')}</span>
+                                    <svg class="w-4 h-4 text-[#0F2B4D]/40 transition group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                                </div>
+                            </summary>
+                            <div class="px-5 pb-5 pt-1 border-t border-[#0F2B4D]/5 text-sm space-y-3">
+                                <div>
+                                    <span class="text-xs font-semibold text-[#0F2B4D]/40 block mb-1">Year</span>
+                                    <p class="text-[#0F2B4D]/75">${esc(x.year||'Exact year unverified')} ${x.verified?'':'<span class="uncertain">(unverified)</span>'}</p>
+                                </div>
+                                <div>
+                                    <span class="text-xs font-semibold text-[#0F2B4D]/40 block mb-1">Method</span>
+                                    <p class="text-[#0F2B4D]/75">${esc(x.method||'Insufficient data')}</p>
+                                </div>
+                                <div>
+                                    <span class="text-xs font-semibold text-[#0F2B4D]/40 block mb-1">Sample / Data</span>
+                                    <p class="text-[#0F2B4D]/75">${esc(x.sample||'Insufficient data')}</p>
+                                </div>
+                                <div>
+                                    <span class="text-xs font-semibold text-[#0F2B4D]/40 block mb-1">Conclusion / Thesis</span>
+                                    <p class="text-[#0F2B4D]/75 leading-relaxed">${esc(x.conclusion||'Insufficient data')}</p>
+                                </div>
+                            </div>
+                        </details>`).join('')}
+                </div>
+            </div>`;
+    }
+    b.innerHTML = `
+        <div class="p-7">
+            <div class="flex items-start justify-between gap-3 mb-1">
+                <h3 class="serif text-2xl font-bold text-[#0F2B4D]">${esc(s.name)}</h3>
+                <span class="chip whitespace-nowrap shrink-0">${esc(schoolOf(s))}</span>
+            </div>
+            <p class="text-sm text-[#0F2B4D]/50 mb-5">${esc(s.nationality)} · ${yrs}${s.nameEn?` · <span class="italic">${esc(s.nameEn)}</span>`:''}</p>
+            <div class="mb-6">
+                <h4 class="text-xs uppercase tracking-wider text-[#0F2B4D]/40 font-semibold mb-2">Biography</h4>
+                <p class="text-sm text-[#0F2B4D]/75 leading-relaxed">${esc(s.bio)}</p>
+            </div>
+            ${w}${r}
+        </div>
+    `;
+    $('modal').classList.add('open');
+}
+
+init();
+</script>
 </body>
 </html>
